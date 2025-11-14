@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title> Better Canvas </title>
+    </head>
+    <body>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }} </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+
+	{% block nav %}
+		<!-- links go here for index.html -->
+	{% endblock %}
+
+        {% block content %} 
+		<!-- generalized content goes in this block -->
+	{% endblock %}
+    </body>
+</html>
+
