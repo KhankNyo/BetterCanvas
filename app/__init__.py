@@ -1,24 +1,17 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-import os
+from .config import create_app_config
 
-db = SQLAlchemy()
+g_DB = SQLAlchemy()
 
-# find the working directory you are in
-basedir =  os.path.abspath(os.path.dirname(__file__))
 def create_app():
 
     myapp_obj = Flask(__name__)
-    myapp_obj.config.from_mapping(
-        SECRET_KEY = 'you-will-never-guess',
-        # appends to working directory app.db
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'app.db'),
-        SQLALCHEMY_TRACK_MODIFICATIONS = False,
-    )
+    create_app_config(myapp_obj);
 
-    db.init_app(myapp_obj)
+    g_DB.init_app(myapp_obj)
     with myapp_obj.app_context():
         from . import routes
-        db.create_all()
+        g_DB.create_all()
 
     return myapp_obj
