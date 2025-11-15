@@ -11,7 +11,7 @@ def index():
 #LOGIC: in index.html, the links go to redirects so I can flash a message
 @myapp_obj.route('/redirect')
 def indexRedirect():
-    flash('You''re already here!')
+    flash('You\'re already here!')
     return redirect('/')
 
 #demo page to still work on
@@ -28,3 +28,8 @@ def newFeatureRedirect():
 def loginRedirect():
     flash('Moved to login page!')
     return redirect('/auth/login')
+
+@myapp_obj.route('/people')
+def people():
+    #list out people in the class and their contact info. get it from database
+    return render_template('people.html')
