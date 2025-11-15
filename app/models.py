@@ -1,4 +1,4 @@
-from app import db
+from app import g_DB as db
 
 class Student(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
