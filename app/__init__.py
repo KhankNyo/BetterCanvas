@@ -11,7 +11,8 @@ def create_app():
 
     g_DB.init_app(myapp_obj)
     with myapp_obj.app_context():
-        from . import routes
+        from .auth import routes
+        from .main import routes
         g_DB.create_all()
 
     return myapp_obj
