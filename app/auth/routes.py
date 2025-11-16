@@ -79,6 +79,6 @@ def signout():
         # remove user's data in the session, except for flashed messages
         for key in list(session.keys()):
             if not key.startswith('_'):
-                session.pop('username', None)
+                session.pop(key, None)
         flash('You are now logged out.')
     return redirect('/')
