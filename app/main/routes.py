@@ -42,3 +42,12 @@ def people():
 def postRedirect():
     flash('Created Post (not implemented yet)!')
     return redirect('/feature')
+
+@myapp_obj.route('/logout')
+def logout():
+    if "username" not in session:
+        flash('You are not logged in.')
+    else:
+        session.pop('username', None)
+        flash('You are now logged out.')
+    return redirect('/')
