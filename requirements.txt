@@ -1,1 +1,18 @@
-Requirements go here
+
+Implement Flask, SQLAlchemy, Flask-Login, WTForms
+
+python3 run.py starts without exceptions.
+
+Visiting /, /feature, and /auth/login renders pages.
+
+WTForms form is rendered at /auth/login; POST returns “Not implemented” but runs validation and shows errors.
+- basically, it has to be able to check whether the user/password works or not
+
+Flask-Login is installed and imported; User model provides properties (is_authenticated, etc.)
+
+SQLAlchemy models import without error; SQLite URI exists in config.
+
+Base template includes a nav and {% block content %}; child templates extend it.
+
+README includes: install, run, and a screenshot of a rendered page.
+

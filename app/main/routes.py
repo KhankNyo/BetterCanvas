@@ -33,3 +33,8 @@ def loginRedirect():
 def people():
     #list out people in the class and their contact info. get it from database
     return render_template('people.html')
+
+@myapp_obj.route('/postcreated')
+def postRedirect():
+    flash('Created Post (not implemented yet)!')
+    return redirect('/feature')
