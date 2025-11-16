@@ -2,7 +2,7 @@ from flask import render_template, request, flash, redirect, session
 from ..forms import LoginForm, RegistrationForm, SignOutForm
 #from app import myapp_obj
 from flask import current_app as myapp_obj
-from ..models import Student
+from ..models import Student, Teacher
 from app import g_DB as db
 from werkzeug.security import check_password_hash
 
@@ -19,9 +19,16 @@ def login():
                 #ADD LOGIC HERE (like check user from database, etc)
                 username= form.username.data
                 password = form.password.data
+		#check if the user data is in Student or Teacher tables
+                isStudent = True
                 user=Student.query.filter_by(username=username).first()
+                if not user:
+                    user=Teacher.query.filter_by(username=username).first()
+                    isStudent = False
+
                 if user and check_password_hash(user.password, password):
                     session['username'] = user.username
+                    session['student'] = isStudent
                     flash('Login Successful')
                     return redirect('/feature')
                 else:
@@ -36,18 +43,31 @@ def register():
     username = form.username.data
     password = form.password.data
     email = form.email.data
+    isTeacher = form.isTeacher.data
     user = Student.query.filter_by(username=username).first()
+    if not user:
+        user = Teacher.query.filter_by(username=username).first()
+
     if request.method == 'POST':
         if form.validate_on_submit():
             if user:
                 flash('Username already taken!')
                 return redirect('/auth/register')
             else:
-                new_student = Student(username=username, email=email)
-                new_student.set_password(password)
-                db.session.add(new_student)
-                db.session.commit()
-                session['username'] = new_student.username
+                if isTeacher:
+                    new_teacher = Teacher(username=username, email=email)
+                    new_teacher.set_password(password)
+                    db.session.add(new_teacher)
+                    db.session.commit()
+                    session['username'] = new_teacher.username
+                    session['student'] = False
+                else:
+                    new_student = Student(username=username, email=email)
+                    new_student.set_password(password)
+                    db.session.add(new_student)
+                    db.session.commit()
+                    session['username'] = new_student.username
+                    session['student'] = True
                 flash('Successfully registered! You are logged in!')
                 return redirect('/feature')
 

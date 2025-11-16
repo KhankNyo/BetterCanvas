@@ -12,8 +12,13 @@ class RegistrationForm(FlaskForm):
     username = StringField('User Name', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
+    isTeacher = BooleanField('I am a teacher')
     submit = SubmitField('Register')
-
 
 class SignOutForm(FlaskForm):
     submit = SubmitField('Sign Out')
+
+class AnnouncementForm(FlaskForm):
+     title = StringField('Title')
+     description = StringField('Description', validators=[DataRequired()])
+     submit = SubmitField('Post')
