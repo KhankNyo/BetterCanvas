@@ -1,18 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
-    <p>Hello, {{username}}!</p>
+    <a href="/"> Back to Home Page </a>
     <h1> You can read announcements here! </h1>
 
-    <form action="/postcreated" method="get">
-        <label for="fname">Create Announcement:</label>
-        <input type="text" id="fname" name="fname"><br><br>
-        <input type="submit" value="Submit">
+    {% if isStudent %}
+        <p> Student View </p>
+    {% else %}
+    <form action="" method="POST">
+        {{ form.hidden_tag() }}
+        <p> <u>Create an Announcement</u> </p>
+        <p>
+            {{ form.title.label }}
+            {{ form.title(size=32) }}
+                {% for error in form.title.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+        <br>
+            {{ form.description.label }} <br>
+            {{ form.description(size=200) }}
+                {% for error in form.description.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+         <br>
+            {{ form.submit() }}
+        </p>
     </form>
-
-<p> not implemented </p>
-
+    {% endif %}
+    <p> ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+    <h2> Recent Announcements: </h2>
     <!-- TO DO STUFF HERE -->
+    {% for post in posts %}
+        <p><u><em>Title:</em> <strong>{{post.title}}</strong></u> <br>
+        <em>Description:</em> {{post.description}} <br>
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+    {% endfor %}    
 
 {% endblock %}

@@ -1,10 +1,13 @@
 from flask import render_template, request, flash, redirect, session
 from flask import current_app as myapp_obj
+from ..forms import AnnouncementForm
+from ..models import Announcement
+from app import g_DB as db
 
 #home page that shows links in our site
 @myapp_obj.route('/')
 def index():
-    return render_template('main/index.html')
+    return render_template('main/index.html', username = session.get('username'), isStudent = session.get('student'))
 
 #LOGIC: in index.html, the links go to redirects so I can flash a message
 @myapp_obj.route('/redirect')
@@ -13,12 +16,22 @@ def indexRedirect():
     return redirect('/')
 
 #demo page to still work on
-@myapp_obj.route('/feature')
+@myapp_obj.route('/feature', methods = ['GET', 'POST'])
 def newFeature():
-    if "username" in session:
-        return render_template('main/features.html', username=session['username'])
-    flash('You are not logged in!')
-    return redirect('/auth/login')
+    posts = Announcement.query.all()
+    form = AnnouncementForm()
+    title = form.title.data
+    desc = form.description.data
+
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            flash("Post announced!")
+            newPost = Announcement(title = title, description = desc)
+            db.session.add(newPost)
+            db.session.commit()
+            return redirect('/feature')
+
+    return render_template('main/features.html', username = session.get('username'), isStudent = session.get('student'), posts = posts, form = form)
 
 @myapp_obj.route('/feature_redirect')
 def newFeatureRedirect():
@@ -33,10 +46,7 @@ def loginRedirect():
 @myapp_obj.route('/people')
 def people():
     #list out people in the class and their contact info. get it from database
-    if "username" in session:
-        return render_template('people.html', username=session['username'])
-    flash('You are not logged in!')
-    return redirect('/auth/login')
+    return render_template('people.html', username = session.get('username'), isStudent = session.get('student'))
 
 @myapp_obj.route('/postcreated')
 def postRedirect():
@@ -45,9 +55,4 @@ def postRedirect():
 
 @myapp_obj.route('/logout')
 def logout():
-    if "username" not in session:
-        flash('You are not logged in.')
-    else:
-        session.pop('username', None)
-        flash('You are now logged out.')
-    return redirect('/')
+    return redirect("auth/signout");

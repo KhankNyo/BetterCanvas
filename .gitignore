@@ -3,4 +3,5 @@ __MACOSX
 __pycache__
 .DS_Store
 *.db
+.nvimrc
 
