@@ -4,7 +4,7 @@
     </head>
     <body>
 
-    <header> Simpler Canvas Header</header>
+    <header> Simpler Canvas Header {% if username %} - Signed in as {{username}} {% endif %} </header>
         {% with messages = get_flashed_messages() %}
             {% if messages %}
             <ul>

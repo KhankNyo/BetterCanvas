@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect
+from flask import render_template, request, flash, redirect, session
 #from app import myapp_obj
 from flask import current_app as myapp_obj
 from ..forms import LoginForm
@@ -6,7 +6,7 @@ from ..forms import LoginForm
 #home page that shows links in our site
 @myapp_obj.route('/')
 def index():
-    return render_template('main/index.html')
+    return render_template('main/index.html', username = session.get('username'))
 
 #LOGIC: in index.html, the links go to redirects so I can flash a message
 @myapp_obj.route('/redirect')
@@ -17,7 +17,7 @@ def indexRedirect():
 #demo page to still work on
 @myapp_obj.route('/feature')
 def newFeature():
-    return render_template('main/features.html')
+    return render_template('main/features.html', username = session.get('username'))
 
 @myapp_obj.route('/feature_redirect')
 def newFeatureRedirect():
@@ -32,7 +32,7 @@ def loginRedirect():
 @myapp_obj.route('/people')
 def people():
     #list out people in the class and their contact info. get it from database
-    return render_template('people.html')
+    return render_template('people.html', username = session.get('username'))
 
 @myapp_obj.route('/postcreated')
 def postRedirect():

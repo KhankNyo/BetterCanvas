@@ -15,3 +15,5 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Register')
 
 
+class SignOutForm(FlaskForm):
+    submit = SubmitField('Sign Out')
