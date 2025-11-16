@@ -1,12 +1,11 @@
-from flask import render_template, request, flash, redirect
+from flask import render_template, request, flash, redirect, session
 from ..forms import LoginForm, RegistrationForm
-#from app import myapp_obj
 from flask import current_app as myapp_obj
 from ..models import Student
 from app import g_DB as db
 from werkzeug.security import check_password_hash
+import flask_login
 
-#login page
 @myapp_obj.route('/auth/login', methods = ['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -19,6 +18,7 @@ def login():
             user=Student.query.filter_by(username=username).first()
             if user and check_password_hash(user.password, password):
                 flash('Login Successful')
+                session['username'] = username
                 return redirect('/feature')
             else:
                 flash('Not successful, data missing or incorrect!')
@@ -43,7 +43,7 @@ def register():
                 new_student.set_password(password)
                 db.session.add(new_student)
                 db.session.commit()
-                flash('Successfully registered! You are logged in!')
+                flash('Successfully registered! You are now logged in!')
                 return redirect('/feature')
 
     return render_template('auth/register.html', form=form)

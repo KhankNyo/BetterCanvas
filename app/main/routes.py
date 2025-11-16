@@ -1,7 +1,5 @@
-from flask import render_template, request, flash, redirect
-#from app import myapp_obj
+from flask import render_template, request, flash, redirect, session
 from flask import current_app as myapp_obj
-from ..forms import LoginForm
 
 #home page that shows links in our site
 @myapp_obj.route('/')
@@ -17,7 +15,10 @@ def indexRedirect():
 #demo page to still work on
 @myapp_obj.route('/feature')
 def newFeature():
-    return render_template('main/features.html')
+    if "username" in session:
+        return render_template('main/features.html', username=session['username'])
+    flash('You are not logged in!')
+    return redirect('/auth/login')
 
 @myapp_obj.route('/feature_redirect')
 def newFeatureRedirect():
@@ -32,7 +33,10 @@ def loginRedirect():
 @myapp_obj.route('/people')
 def people():
     #list out people in the class and their contact info. get it from database
-    return render_template('people.html')
+    if "username" in session:
+        return render_template('people.html', username=session['username'])
+    flash('You are not logged in!')
+    return redirect('/auth/login')
 
 @myapp_obj.route('/postcreated')
 def postRedirect():
