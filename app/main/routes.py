@@ -22,31 +22,42 @@ def newFeature():
     form = AnnouncementForm()
     title = form.title.data
     desc = form.description.data
+    if "username" in session:
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                flash("Post announced!")
+                newPost = Announcement(title=title, description=desc)
+                db.session.add(newPost)
+                db.session.commit()
+                return redirect('/feature')
 
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            flash("Post announced!")
-            newPost = Announcement(title = title, description = desc)
-            db.session.add(newPost)
-            db.session.commit()
-            return redirect('/feature')
-
-    return render_template('main/features.html', username = session.get('username'), isStudent = session.get('student'), posts = posts, form = form)
+        return render_template('main/features.html', username=session.get('username'), isStudent=session.get('student'),
+                               posts=posts, form=form)
+    flash('You are not logged in!')
+    return redirect('/auth/login')
 
 @myapp_obj.route('/feature_redirect')
 def newFeatureRedirect():
-    flash('Moved to announcements page!')
+    if "username" in session:
+        flash('Moved to announcements page!')
     return redirect('/feature')
 
 @myapp_obj.route('/login_redirect')
 def loginRedirect():
-    flash('Moved to login page!')
-    return redirect('/auth/login')
+    if session.get('username'):
+        flash('You are already logged in.')
+        return redirect('/')
+    else:
+        flash('Moved to login page!')
+        return redirect('/auth/login')
 
 @myapp_obj.route('/people')
 def people():
     #list out people in the class and their contact info. get it from database
-    return render_template('people.html', username = session.get('username'), isStudent = session.get('student'))
+    if "username" in session:
+        return render_template('people.html', username = session.get('username'), isStudent = session.get('student'))
+    flash('You are not logged in!')
+    return redirect('/auth/login')
 
 @myapp_obj.route('/postcreated')
 def postRedirect():
@@ -55,4 +66,4 @@ def postRedirect():
 
 @myapp_obj.route('/logout')
 def logout():
-    return redirect("auth/signout");
+    return redirect("auth/signout")

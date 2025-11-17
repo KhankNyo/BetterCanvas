@@ -6,8 +6,9 @@
     <body>
 
     <header> 
-        Simpler Canvas Header 
-        {% if username %} - Signed in as {{username}} (
+        Simpler Canvas -
+        <a href="/"> HOME</a>
+        {% if username %}  - Signed in as {{username}} (
             {% if isStudent %} Student {% else %} Teacher {% endif %} )
         {% endif %} 
     </header>

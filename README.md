@@ -7,3 +7,6 @@ Run the file run.py using python3 run.py in your terminal.
 
 
 # Team Roles
+- Bryan: Made models and routes + most of the html 
+- Khanh: Created and organized files, decorated + formatted
+- Janet: Implemented login/logout with database 
