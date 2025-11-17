@@ -6,7 +6,7 @@
     {% if isStudent %}
         <p> Student View </p>
     {% else %}
-    <form action="" method="POST">
+    <form action="" method="POST" id="announce">
         {{ form.hidden_tag() }}
         <p> <u>Create an Announcement</u> </p>
         <p>
@@ -24,6 +24,7 @@
                 {% endfor %}
 			<br>
             {{ form.submit() }}
+			<textarea></textarea>
         </p>
     </form>
     {% endif %}
