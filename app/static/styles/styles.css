@@ -1,13 +1,13 @@
 :root {
-	--text-color: #CcCcCc;
-	--background-color: #222222;
-	--header-text-color: var(--background-color);
+	--font-color: #eeeeee;
+	--background-color-image: linear-gradient(to left top, #202045, #254040) /*#222222*/;
+	--header-font-color: var(--background-color);
 	--link-color: #4747ff;
-	--link-color-visited: #ab5cff;
+	--link-color-visited: #cb7cff;
 	--link-color-active: #FF0000;
 	--link-color-hover: #c48cff;
 	--font-family: "Cascadia Mono", monospace;
-	--text-area-bg-color: #f8f8f8;
+	--text-area-bg-color: linear-gradient(to left top, #3d5043, #615545);
 }
 
 h1 {
@@ -16,9 +16,10 @@ h1 {
 
 body {
 	text-align: center;
-	background-color: var(--background-color);
-	color: var(--text-color);
+	background-image: var(--background-color-image);
+	color: var(--font-color);
 	font-family: var(--font-family);
+	height: 100%;
 }
 
 p {
@@ -39,6 +40,7 @@ a:hover {
 	color: var(--link-color-hover);
 }
 
+
 textarea {
 	width: 70%;
 	height: 150px;
@@ -46,13 +48,15 @@ textarea {
 	box-sizing: border-box;
 	border: 2px solid #ccc;
 	border-radius: 4px;
-	background-color: var(--text-area-bg-color);
+	background-image: var(--text-area-bg-color);
 	resize: none;
+	color: var(--font-color);
 	font-size: 17;
 }
 .announce_ronly {
-	color: var(--text-color);
-	background-color: var(--background-color);
+	color: var(--font-color);
+	background-color: transparent;
+	background-image: none;
 	field-sizing: content;
 	box-sizing: content;
 	height: content;
@@ -62,9 +66,24 @@ textarea {
 	border-radius: none;
 }
 .small-note {
+	color: var(#aaAaAa);
 	font-size: 12;
 }
 .title {
+	color: #e09d46;
 	font-size: 30;
 }
-
+.animated-rainbow-text {
+    font-size: 42px;
+    font-family: Arial Black, Gadget, sans-serif;
+    animation: rainbow-color-change 3s linear infinite alternate;
+}
+@keyframes rainbow-color-change {
+    0%, 100% { color: #ff0000; } /* Red */
+    14% { color: #ff8b00; } /* Orange */
+    28% { color: #e8ff00; } /* Yellow */
+    42% { color: #5dff00; } /* Green */
+    56% { color: #00b9ff; } /* Blue */
+    70% { color: #5d00ff; } /* Indigo */
+    84% { color: #e800ff; } /* Violet */
+}

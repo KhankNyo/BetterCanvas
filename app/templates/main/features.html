@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> You can read announcements here! </h1>
+    <h1> You can 
+		<b class="animated-rainbow-text">read</b>
+		announcements
+		<b class="animated-rainbow-text">here!</b>
+	</h1>
 
     {% if isStudent %}
         <p> Student View </p>
@@ -9,8 +13,10 @@
     <form action="" method="POST" id="announce">
         {{ form.hidden_tag() }}
         <p> <u>Create an Announcement</u> </p>
-        <p>
-			{{ form.title.label }}
+		<p>
+			<b class="title">
+				{{ form.title.label }}
+			</b>
 			<br>
 			{{ form.title(size=32) }}
 				{% for error in form.title.errors %}
@@ -29,7 +35,7 @@
     {% endif %}
     <p> ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
     <p> ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
-    <h2> Recent Announcements: </h2>
+    <h2 class="title"> Recent Announcements: </h2>
     <!-- TO DO STUFF HERE -->
     {% for post in posts %}
 	<p>
