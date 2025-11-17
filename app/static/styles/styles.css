@@ -7,6 +7,7 @@
 	--link-color-active: #FF0000;
 	--link-color-hover: #c48cff;
 	--font-family: "Cascadia Mono", monospace;
+	--text-area-bg-color: #f8f8f8;
 }
 
 h1 {
@@ -21,7 +22,6 @@ body {
 }
 
 p {
-	text-align: center;
 	font-family: var(--font-family);
 	font-size: 20px;
 }
@@ -38,3 +38,15 @@ a:active {
 a:hover {
 	color: var(--link-color-hover);
 }
+
+textarea {
+	width: 70%;
+	height: 150px;
+	padding: 12px 20px;
+	box-sizing: border-box;
+	border: 2px solid #ccc;
+	border-radius: 4px;
+	background-color: var(--text-area-bg-color);
+	resize: none;
+}
+
