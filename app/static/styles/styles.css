@@ -1,13 +1,11 @@
 :root {
 	--text-color: #CcCcCc;
-	--header-text-color: #
 	--background-color: #222222;
-
+	--header-text-color: var(--background-color);
 	--link-color: #4747ff;
 	--link-color-visited: #ab5cff;
 	--link-color-active: #FF0000;
 	--link-color-hover: #c48cff;
-
 	--font-family: "Cascadia Mono", monospace;
 }
 
