@@ -1,0 +1,42 @@
+:root {
+	--text-color: #CcCcCc;
+	--header-text-color: #
+	--background-color: #222222;
+
+	--link-color: #4747ff;
+	--link-color-visited: #ab5cff;
+	--link-color-active: #FF0000;
+	--link-color-hover: #c48cff;
+
+	--font-family: "Cascadia Mono", monospace;
+}
+
+h1 {
+	text-align: center;
+}
+
+body {
+	text-align: center;
+	background-color: var(--background-color);
+	color: var(--text-color);
+	font-family: var(--font-family);
+}
+
+p {
+	text-align: center;
+	font-family: var(--font-family);
+	font-size: 20px;
+}
+
+a:link {
+	color: var(--link-color);
+}
+a:visited {
+	color: var(--link-color-visited);
+}
+a:active {
+	color: var(--link-color);
+}
+a:hover {
+	color: var(--link-color-hover);
+}

@@ -1,6 +1,7 @@
 <html>
     <head>
         <title> Better Canvas </title>
+		<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/styles.css') }}">
     </head>
     <body>
 
@@ -12,11 +13,9 @@
     </header>
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }} </li>
-                {% endfor %}
-            </ul>
+			{% for message in messages %}
+				<p>{{ message }}</p><br>
+			{% endfor %}
             {% endif %}
         {% endwith %}
 
@@ -24,7 +23,7 @@
 		<!-- links go here for index.html -->
 	{% endblock %}
 
-        {% block content %} 
+	{% block content %} 
 		<!-- generalized content goes in this block -->
 	{% endblock %}
     </body>
