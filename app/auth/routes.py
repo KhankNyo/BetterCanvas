@@ -10,7 +10,8 @@ import flask_login
 def login():
     #check if the current session is already active
     if session.get('username'):
-        return redirect('/auth/signout')
+        flash('You are already logged in.')
+        return redirect('/')
     else:
         form = LoginForm()
         if request.method == 'POST':
