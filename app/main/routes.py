@@ -3,6 +3,7 @@ from flask import current_app as myapp_obj
 from ..forms import AnnouncementForm
 from ..models import Announcement
 from app import g_DB as db
+import time
 
 #home page that shows links in our site
 @myapp_obj.route('/')
@@ -22,11 +23,12 @@ def newFeature():
     form = AnnouncementForm()
     title = form.title.data
     desc = form.description.data
+    timestamp = getCurrentTime();
     if "username" in session:
         if request.method == 'POST':
             if form.validate_on_submit():
                 flash("Post announced!")
-                newPost = Announcement(title=title, description=desc)
+                newPost = Announcement(title=title, description=desc, timestamp=timestamp)
                 db.session.add(newPost)
                 db.session.commit()
                 return redirect('/feature')
@@ -67,3 +69,10 @@ def postRedirect():
 @myapp_obj.route('/logout')
 def logout():
     return redirect("auth/signout")
+
+
+def getCurrentTime():
+    # NOTE: timezones are aa big and ugly mess, we'll assume the time from where the app is running
+    serverTimeToday = time.ctime()
+    print(serverTimeToday)
+    return serverTimeToday

@@ -23,5 +23,6 @@ class Teacher(db.Model):
 
 class Announcement(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(32), nullable=True)
-    description = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(64), nullable=True)
+    description = db.Column(db.String(1024), nullable=False)
+    timestamp = db.Column(db.String(64), nullable=False)
