@@ -33,9 +33,13 @@
     <!-- TO DO STUFF HERE -->
     {% for post in posts %}
 	<p>
-		<p class="timestamp">{{post.timestamp}}</p>
-		<u><em>Title:</em> <strong>{{post.title}}</strong></u> <br>
-		<em>Description:</em> <br>
+		<p class="small-note">
+			{{post.timestamp}}<br>
+			{{post.announcer}}, {{post.email}}
+		</p>
+		<p class="title">
+			<strong>{{post.title}}</strong>
+		</p>
 		<textarea readonly class="announce_ronly">{{post.description}}</textarea>
 		<br>
         ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 

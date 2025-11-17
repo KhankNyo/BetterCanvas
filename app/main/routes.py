@@ -23,18 +23,23 @@ def newFeature():
     form = AnnouncementForm()
     title = form.title.data
     desc = form.description.data
-    timestamp = getCurrentTime();
+    timestamp = getCurrentTime()
+
     if "username" in session:
+        username = session.get("username")
+        isStudent = session.get("student")
+        email = session.get("email")
+
         if request.method == 'POST':
             if form.validate_on_submit():
                 flash("Post announced!")
-                newPost = Announcement(title=title, description=desc, timestamp=timestamp)
+                newPost = Announcement(title=title, description=desc, timestamp=timestamp, announcer=username, email=email)
                 db.session.add(newPost)
                 db.session.commit()
                 return redirect('/feature')
 
-        return render_template('main/features.html', username=session.get('username'), isStudent=session.get('student'),
-                               posts=posts, form=form)
+        return render_template('main/features.html', username=username, isStudent=isStudent, posts=posts, form=form)
+
     flash('You are not logged in!')
     return redirect('/auth/login')
 
@@ -72,7 +77,6 @@ def logout():
 
 
 def getCurrentTime():
-    # NOTE: timezones are aa big and ugly mess, we'll assume the time from where the app is running
+    # NOTE(Khanh): timezones are a big and ugly mess, we'll assume the time from where the app is running
     serverTimeToday = time.ctime()
-    print(serverTimeToday)
     return serverTimeToday

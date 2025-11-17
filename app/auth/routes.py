@@ -20,14 +20,13 @@ def login():
                 username= form.username.data
                 password = form.password.data
                 #check if the user data is in Student or Teacher tables
-                isStudent = True
+                is_student = True
                 user=Student.query.filter_by(username=username).first()
                 if not user:
                     user=Teacher.query.filter_by(username=username).first()
-                    isStudent = False
+                    is_student = False
                 if user and check_password_hash(user.password, password):
-                    session['username'] = user.username
-                    session['student'] = isStudent
+                    add_or_update_user_in_local_session(name=username, is_student=is_student, email=user.email)
                     flash('Login Successful')
                     return redirect('/feature')
                 else:
@@ -58,15 +57,13 @@ def register():
                     new_teacher.set_password(password)
                     db.session.add(new_teacher)
                     db.session.commit()
-                    session['username'] = new_teacher.username
-                    session['student'] = False
+                    add_or_update_user_in_local_session(name=username, is_student=False, email=email)
                 else:
                     new_student = Student(username=username, email=email)
                     new_student.set_password(password)
                     db.session.add(new_student)
                     db.session.commit()
-                    session['username'] = new_student.username
-                    session['student'] = True
+                    add_or_update_user_in_local_session(name=username, is_student=True, email=email)
                 flash('Successfully registered! You are logged in!')
                 return redirect('/feature')
 
@@ -83,3 +80,10 @@ def signout():
                 session.pop(key, None)
         flash('You are now logged out.')
     return redirect('/')
+
+
+def add_or_update_user_in_local_session(name, is_student, email):
+    session['username'] = name
+    session['student'] = is_student
+    session['email'] = email
+
