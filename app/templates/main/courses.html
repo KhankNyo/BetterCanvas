@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> You can 
+		<b class="animated-rainbow-text">view</b>
+		courses
+		<b class="animated-rainbow-text">here!</b>
+	</h1>
+
+    {% if isStudent %}
+        <p> Student View </p>
+    {% else %}
+    <form action="" method="POST" id="courseCreate">
+        {{ form.hidden_tag() }}
+        <p> <u>Create a Course</u> </p>
+		<p>
+			<b class="title">
+				{{ form.name.label }}
+			</b>
+			<br>
+			{{ form.name(size=32) }}
+				{% for error in form.name.errors %}
+				<span style="color: red;"> [{{error}}] </span>
+				{% endfor %}
+			<br>
+            {{ form.description.label }} <br>
+            {{ form.description(size=200) }}
+                {% for error in form.description.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+			<br>
+
+            {{ form.units.label }}
+            {{ form.units(size=2) }}
+                {% for error in form.units.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+            {{ form.submit() }}
+        </p>
+    </form>
+    {% endif %}
+    <p> ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+    <p> ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+    <h2 class="animated-rainbow-text"> Course List: </h2>
+    <!-- TO DO STUFF HERE -->
+    {% for course in courses %}
+	<p>
+		<p class="title">
+			<strong>{{course.name}}</strong>
+		</p>
+		<textarea readonly class="announce_ronly">{{course.description}}</textarea><br>
+                <p class="title">  <strong> Units: {{course.units}} </strong> </p>
+                <p class="title"> Professor: {{course.teacher.username}} </p>
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+	</p>
+    {% endfor %}
+
+{% endblock %}

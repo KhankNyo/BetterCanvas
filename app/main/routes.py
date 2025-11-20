@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect, session
 from flask import current_app as myapp_obj
-from ..forms import AnnouncementForm
-from ..models import Announcement
+from ..forms import AnnouncementForm, CourseForm
+from ..models import Announcement, Student, Teacher, Course, Enrollment
 from app import g_DB as db
 import time
 
@@ -19,7 +19,6 @@ def indexRedirect():
 #demo page to still work on
 @myapp_obj.route('/feature', methods = ['GET', 'POST'])
 def newFeature():
-    posts = Announcement.query.all()
     form = AnnouncementForm()
     title = form.title.data
     desc = form.description.data
@@ -38,6 +37,7 @@ def newFeature():
                 db.session.commit()
                 return redirect('/feature')
 
+        posts = Announcement.query.all()
         return render_template('main/features.html', username=username, isStudent=isStudent, posts=posts, form=form)
 
     flash('You are not logged in!')
@@ -66,10 +66,33 @@ def people():
     flash('You are not logged in!')
     return redirect('/auth/login')
 
-@myapp_obj.route('/postcreated')
-def postRedirect():
-    flash('Created Post (not implemented yet)!')
-    return redirect('/feature')
+@myapp_obj.route('/courses', methods = ['GET', 'POST'])
+def createCourse():
+    if "username" in session:
+        courses = Course.query.all()
+        isStudent = session.get('student')
+        username = session.get('username')
+        if not isStudent: #form to get for teachers
+            form = CourseForm()
+            name = form.name.data
+            desc = form.description.data
+            unit = form.units.data
+
+            if request.method == 'POST':
+                if form.validate_on_submit():
+                    #attach current teacher's id to course just made and add it to db
+                    teacher = Teacher.query.filter_by(username=session.get("username")).first()
+                    newCourse = Course(name=name, description=desc, units=unit, teacher_id=teacher.id)
+                    db.session.add(newCourse)
+                    db.session.commit()
+                    return redirect('/courses')
+            #this is first page teacher will see
+            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=form)
+        else: #student view
+            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses)
+    #redirect non-users to log in first
+    flash('You are not logged in!')
+    return redirect('/auth/login')
 
 @myapp_obj.route('/logout')
 def logout():

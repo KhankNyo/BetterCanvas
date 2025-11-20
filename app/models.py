@@ -32,3 +32,20 @@ class Announcement(db.Model):
     timestamp = db.Column(db.String(64), nullable=False)
     announcer = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
     email = db.Column(db.String(g_EMAIL_STRING_CAPACITY), nullable=False)
+
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), nullable=False)
+    description = db.Column(db.String(256), nullable = True)
+    units = db.Column(db.Integer, nullable=False)
+    #foreign key ensures data integrity: a course cannot be added with a
+    #teacherID that does not exist in Teacher table first
+    teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"), nullable=False)
+    #this is to define a reference to Teacher table (ex: using myCourse.teacher.name)
+    teacher = db.relationship('Teacher', backref='courses')
+
+class Enrollment(db.Model):
+    #this table uses TWO foreign keys as a composite key
+    course_id = db.Column(db.Integer, db.ForeignKey("course.id"), primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"), primary_key=True)
+    course_grade = db.Column(db.Float, default = 0.00)
