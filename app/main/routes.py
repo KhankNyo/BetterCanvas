@@ -3,7 +3,7 @@ from flask import current_app as myapp_obj
 from ..forms import AnnouncementForm, CourseForm
 from ..models import Announcement, Student, Teacher, Course, Enrollment
 from app import g_DB as db
-import time
+import time, sqlite3
 
 #home page that shows links in our site
 @myapp_obj.route('/')
@@ -62,7 +62,9 @@ def loginRedirect():
 def people():
     #list out people in the class and their contact info. get it from database
     if "username" in session:
-        return render_template('people.html', username = session.get('username'), isStudent = session.get('student'))
+        teachers = Teacher.query.all()
+        students = Student.query.all()
+        return render_template('people.html', username = session.get('username'), isStudent = session.get('student'), students = students, teachers = teachers)
     flash('You are not logged in!')
     return redirect('/auth/login')
 
