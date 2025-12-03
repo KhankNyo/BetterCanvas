@@ -10,7 +10,8 @@ Run the file run.py using python3 run.py in your terminal. Put in the given link
 ![student's runtime view](images/runtime_student_ss.png)
 
 
-
+# Test Instructions: 
+Open up the test directory 
 
 # Team Roles
 - Bryan: Made models and routes + most of the html 
