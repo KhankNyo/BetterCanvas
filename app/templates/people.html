@@ -6,42 +6,45 @@
 
 	<h1> Teachers and Students of the Class </h1>
     <p>Here you can find the students and teachers of the class and their contact information.</p>
-<p></p>
-    <h2> Teachers </h2>
-        <table class = "centered-table">
-            <thead>
-               <tr>
-                   <th>Username</th>
-                   <th>Email</th>
-               </tr>
-            </thead>
-            <tbody>
-                {%for teacher in teachers %}
-                <tr>
-                    <td>{{ teacher.username }}</td>
-                    <td>{{ teacher.email}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     <p></p>
+
+    <h2> Teachers </h2>
+    <table>
+        <thead>
+           <tr>
+               <th>Username</th>
+               <th>Email</th>
+           </tr>
+        </thead>
+        <tbody>
+            {%for teacher in teachers %}
+            <tr>
+                <td>{{ teacher.username }}</td>
+                <td>{{ teacher.email}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p></p>
+
     <h2> Students </h2>
-            <table class = "centered-table">
-                <thead>
-                   <tr>
-                       <th>Username</th>
-                       <th>Email</th>
-                   </tr>
-                </thead>
-                <tbody>
-                    {%for student in students %}
-                    <tr>
-                        <td>{{ student.username }}</td>
-                        <td>{{ student.email}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <table>
+        <thead>
+           <tr>
+               <th>Username</th>
+               <th>Email</th>
+           </tr>
+        </thead>
+        <tbody>
+            {%for student in students %}
+           <tr>
+                <td>{{ student.username }}</td>
+                <td>{{ student.email}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 
 {% endblock %}
