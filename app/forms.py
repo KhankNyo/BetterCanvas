@@ -27,7 +27,11 @@ class CourseForm(FlaskForm):
     name = StringField('Course Name', validators=[DataRequired()])
     description = StringField('Course Description')
     units = IntegerField('Units Provided', validators=[DataRequired()])
+    capacity = IntegerField('Maximum Students', validators=[DataRequired()])
     submit = SubmitField('Create Course')
+
+class CourseSignUp(FlaskForm):
+    submit = SubmitField('Enroll')
 
 class ResourceForm(FlaskForm):
     title = StringField('Title')

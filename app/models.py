@@ -14,6 +14,7 @@ class Student(db.Model):
         self.password = generate_password_hash(password)
     def check_password(self, password):
         return check_password_hash(self.password, password)
+    units_enrolled = db.Column(db.Integer, default = 0)
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -47,6 +48,8 @@ class Course(db.Model):
     name = db.Column(db.String(64), nullable=False)
     description = db.Column(db.String(256), nullable = True)
     units = db.Column(db.Integer, nullable=False)
+    max_capacity = db.Column(db.Integer, nullable=False)
+    students_enrolled = db.Column(db.Integer, default=0)
     #foreign key ensures data integrity: a course cannot be added with a
     #teacherID that does not exist in Teacher table first
     teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"), nullable=False)

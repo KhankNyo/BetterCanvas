@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect, session
 from flask import current_app as myapp_obj
-from ..forms import AnnouncementForm, CourseForm, ResourceForm
+from ..forms import AnnouncementForm, CourseForm, ResourceForm, CourseSignUp
 from ..models import Announcement, Student, Teacher, Course, Enrollment, Resource
 from app import g_DB as db
 import time, sqlite3
@@ -69,29 +69,52 @@ def people():
     return redirect('/auth/login')
 
 @myapp_obj.route('/courses', methods = ['GET', 'POST'])
-def createCourse():
+def showCourses():
     if "username" in session:
         courses = Course.query.all()
         isStudent = session.get('student')
         username = session.get('username')
+	#if a teacher, make form for teachers to create a course and send it render_template
         if not isStudent: #form to get for teachers
             form = CourseForm()
             name = form.name.data
             desc = form.description.data
             unit = form.units.data
+            capacity = form.capacity.data
 
             if request.method == 'POST':
                 if form.validate_on_submit():
                     #attach current teacher's id to course just made and add it to db
                     teacher = Teacher.query.filter_by(username=session.get("username")).first()
-                    newCourse = Course(name=name, description=desc, units=unit, teacher_id=teacher.id)
+                    newCourse = Course(name=name, description=desc, units=unit, max_capacity=capacity, teacher_id=teacher.id)
                     db.session.add(newCourse)
                     db.session.commit()
                     return redirect('/courses')
             #this is first page teacher will see
             return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=form)
-        else: #student view
-            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses)
+        else: #student view - make form for students to enroll in courses instead (enroll button per course)
+            enrollForm = CourseSignUp()
+
+            #logic: when the 'Enroll' button is pressed, we want to get the student's id and course's id to add to Enrollments
+            if request.method == 'POST':
+                #the data for the course id is in the request form
+                course_id = request.form.get('course_id')
+                if course_id:
+                    student = Student.query.filter_by(username=session.get("username")).first()
+                    already_enrolled = Enrollment.query.filter_by(student_id=student.id, course_id=course_id).first()
+                    if already_enrolled:
+                        flash("You're already enrolled to this class!")
+                    else:
+                        course = Course.query.filter_by(id=course_id).first()
+                        newEnroll = Enrollment(student_id=student.id, course_id=course.id)
+                        db.session.add(newEnroll)
+                        if course:
+                            course.students_enrolled += 1
+                        db.session.commit()
+                        flash('Succesfully enrolled!')
+                    return redirect('/courses')
+
+            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm)
     #redirect non-users to log in first
     flash('You are not logged in!')
     return redirect('/auth/login')
@@ -123,7 +146,6 @@ def resources():
 @myapp_obj.route('/logout')
 def logout():
     return redirect("auth/signout")
-
 
 def getCurrentTime():
     # NOTE(Khanh): timezones are a big and ugly mess, we'll assume the time from where the app is running

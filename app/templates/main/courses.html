@@ -31,10 +31,18 @@
 			<br>
 
             {{ form.units.label }}
-            {{ form.units(size=2) }}
+            {{ form.units(size=1) }}
                 {% for error in form.units.errors %}
                 <span style="color: red;"> [{{error}}] </span>
                 {% endfor %}
+                        <br>
+
+            {{ form.capacity.label }}
+            {{ form.capacity(size=1) }}
+                {% for error in form.capacity.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+
             {{ form.submit() }}
         </p>
     </form>
@@ -51,6 +59,19 @@
 		<textarea readonly class="announce_ronly">{{course.description}}</textarea><br>
                 <p class="title">  <strong> Units: {{course.units}} </strong> </p>
                 <p class="title"> Professor: {{course.teacher.username}} </p>
+                <p class="title"> Maximum Capacity: {{course.max_capacity}} </p>
+                <p class="title"> Enrollment Count: {{course.students_enrolled}} </p>
+                {% if isStudent %}
+		<form action="" method="POST">
+			{{ enrollForm.hidden_tag() }}
+                        <!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE ID -->
+                        <input type="hidden" name="course_id" value="{{course.id}}">
+			<p>
+				{{ enrollForm.submit() }}
+			</p>
+		</form>
+		{% endif %}
+
         ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 	</p>
     {% endfor %}
