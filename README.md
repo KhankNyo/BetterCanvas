@@ -11,9 +11,18 @@ Run the file run.py using python3 run.py in your terminal. Put in the given link
 
 
 # Test Instructions: 
-Open up the test directory 
+From the BetterCanvas directory, cd to the test directory in the terminal using "cd app/tests" (without the quotes). 
+### IMPORTANT: run each test separately in the terminal. 
+Ex. input (without the quotes) "pytest test_routes_home.py" and do the same for each test. Here are all the tests that should be run. Feel free to copy and paste:  
+- pytest test_routes_home.py 
+- pytest test_routes_login.py
+- pytest test_routes_redirect.py
+- pytest test_routes_error.py 
+- pytest test_models.py
+- pytest test_forms.py
+
 
 # Team Roles
-- Bryan: Made models and routes + most of the html 
+- Bryan: Made models, forms and routes + most of the html 
 - Khanh: Created and organized files, decorated + formatted
-- Janet: Implemented login/logout with database 
+- Janet: Implemented login/logout with database. Wrote use cases and test cases.  

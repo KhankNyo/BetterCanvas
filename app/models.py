@@ -33,6 +33,15 @@ class Announcement(db.Model):
     announcer = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
     email = db.Column(db.String(g_EMAIL_STRING_CAPACITY), nullable=False)
 
+class Resource(db.Model):
+    id =  db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(64), nullable=True)
+    description = db.Column(db.String(1024), nullable=False)
+    file = db.Column(db.String(64), nullable=False)
+    timestamp = db.Column(db.String(64), nullable=False)
+    announcer = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
+    email = db.Column(db.String(g_EMAIL_STRING_CAPACITY), nullable=False)
+
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)

@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FileField
 from wtforms.validators import DataRequired
 
 class LoginForm(FlaskForm):
@@ -28,3 +28,9 @@ class CourseForm(FlaskForm):
     description = StringField('Course Description')
     units = IntegerField('Units Provided', validators=[DataRequired()])
     submit = SubmitField('Create Course')
+
+class ResourceForm(FlaskForm):
+    title = StringField('Title')
+    description = TextAreaField('Description', validators=[DataRequired()])
+    file = FileField('File')
+    submit = SubmitField('Post')

@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect, session
 from flask import current_app as myapp_obj
-from ..forms import AnnouncementForm, CourseForm
-from ..models import Announcement, Student, Teacher, Course, Enrollment
+from ..forms import AnnouncementForm, CourseForm, ResourceForm
+from ..models import Announcement, Student, Teacher, Course, Enrollment, Resource
 from app import g_DB as db
 import time, sqlite3
 
@@ -64,7 +64,7 @@ def people():
     if "username" in session:
         teachers = Teacher.query.all()
         students = Student.query.all()
-        return render_template('people.html', username = session.get('username'), isStudent = session.get('student'), students = students, teachers = teachers)
+        return render_template('main/people.html', username = session.get('username'), isStudent = session.get('student'), students = students, teachers = teachers)
     flash('You are not logged in!')
     return redirect('/auth/login')
 
@@ -93,6 +93,30 @@ def createCourse():
         else: #student view
             return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses)
     #redirect non-users to log in first
+    flash('You are not logged in!')
+    return redirect('/auth/login')
+
+@myapp_obj.route("/resources", methods = ["GET", "POST", "DELETE"])
+def resources():
+    form = ResourceForm()
+    title = form.title.data
+    desc = form.description.data
+    timestamp = getCurrentTime()
+    if "username" in session:
+        username = session.get("username")
+        email = session.get("email")
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                flash ("Not yet implemented.")
+                '''flash("Resource Posted!")
+                newPost = Resource(title=title, description=desc, timestamp=timestamp, announcer=username, email=email)
+                db.session.add(newPost)
+                db.session.commit()'''
+                return redirect('/resources')
+
+        posts = Resource.query.all()
+
+        return render_template('main/resources.html', username=username, posts=posts, form=form)
     flash('You are not logged in!')
     return redirect('/auth/login')
 

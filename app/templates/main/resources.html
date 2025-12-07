@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1> Resources </h1>
+<p> Here you can upload resources for your fellow students and find resources as well. </p>
+
+<form action="" method="POST" id="announce">
+        {{ form.hidden_tag() }}
+        <p> <u>Upload a Resource</u> </p>
+		<p>
+			<b class="title">
+				{{ form.title.label }}
+			</b>
+			<br>
+			{{ form.title(size=32) }}
+				{% for error in form.title.errors %}
+				<span style="color: red;"> [{{error}}] </span>
+				{% endfor %}
+			<br>
+            {{ form.description.label }} <br>
+            {{ form.description(size=200) }}
+                {% for error in form.description.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+            <br>
+            <label for="fileToUpload">Select file to upload:</label><br>
+        <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
+            {{ form.submit() }}
+        </p>
+    </form>
+
+<p> ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ </p>
+<p> ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ </p>
+
+    <h2 class="title"> Uploaded Resources: </h2>
+    {% for post in posts %}
+	<p>
+		<p class="small-note">
+			{{post.timestamp}}<br>
+			{{post.announcer}}, {{post.email}}
+		</p>
+		<p class="title">
+			<strong>{{post.title}}</strong>
+		</p>
+		<textarea readonly class="announce_ronly">{{post.description}}</textarea>
+        <a id="link" download>File</a>
+		<br>
+        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	</p>
+    {% endfor %}
+
+
+{% endblock %}
