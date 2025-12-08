@@ -103,11 +103,10 @@ def showCourses():
                     student_id = request.form.get('student_id')
                     enrollment = Enrollment.query.filter_by(student_id=student_id,course_id=course_id).first()
                     course = Course.query.filter_by(id=course_id).first()
-                    course.students_enrolled -= 1
                     student = Student.query.filter_by(id=student_id).first()
+                    course.students_enrolled -= 1
                     student.units_enrolled -= course.units
-                    db.session.delete(enrollment)
-                    db.session.commit()
+                    db_delete_now(enrollment);
                     return redirect('/courses')
 
             #this is first page teacher will see
