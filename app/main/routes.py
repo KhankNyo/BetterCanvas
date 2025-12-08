@@ -76,22 +76,44 @@ def showCourses():
         username = session.get('username')
 	#if a teacher, make form for teachers to create a course and send it render_template
         if not isStudent: #form to get for teachers
-            form = CourseForm()
-            name = form.name.data
-            desc = form.description.data
-            unit = form.units.data
-            capacity = form.capacity.data
+            courseForm = CourseForm()
+            name = courseForm.name.data
+            desc = courseForm.description.data
+            unit = courseForm.units.data
+            capacity = courseForm.capacity.data
+            #also have form for dropping students
+            dropForm = CourseSignUp()
+            #finally retrieve the teacher
+            teacher = Teacher.query.filter_by(username=session.get("username")).first()
+
+            #LOGIC: we need to retrieve the list of courses taught by professor,
+            #BUT ALSO the list of students in that course (so a nested list of sorts)
+            coursesTaught = Course.query.filter_by(teacher_id=teacher.id)
 
             if request.method == 'POST':
-                if form.validate_on_submit():
+                #name 'course_form' is defined in jinja2 html
+                if courseForm.validate_on_submit():
                     #attach current teacher's id to course just made and add it to db
                     teacher = Teacher.query.filter_by(username=session.get("username")).first()
                     newCourse = Course(name=name, description=desc, units=unit, max_capacity=capacity, teacher_id=teacher.id)
                     db.session.add(newCourse)
                     db.session.commit()
                     return redirect('/courses')
+                elif dropForm.validate_on_submit():
+                    #retrieve hidden data from request
+                    course_id = request.form.get('course_id')
+                    student_id = request.form.get('student_id')
+                    enrollment = Enrollment.query.filter_by(student_id=student_id,course_id=course_id).first()
+                    course = Course.query.filter_by(id=course_id).first()
+                    course.students_enrolled -= 1
+                    student = Student.query.filter_by(id=student_id).first()
+                    student.units_enrolled -= course.units
+                    db.session.delete(enrollment)
+                    db.session.commit()
+                    return redirect('/courses')
+
             #this is first page teacher will see
-            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=form)
+            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm,coursesTaught=coursesTaught)
         else: #student view - make form for students to enroll in courses instead (enroll button per course)
             enrollForm = CourseSignUp()
             #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
