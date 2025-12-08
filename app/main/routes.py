@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, session
+from flask import render_template, request, flash, redirect, session, url_for
 from flask import current_app as myapp_obj
 from ..forms import AnnouncementForm, CourseForm, ResourceForm, CourseSignUp
 from ..models import Announcement, Student, Teacher, Course, Enrollment, Resource
@@ -10,7 +10,7 @@ import time, sqlite3
 #home page that shows links in our site
 @myapp_obj.route('/')
 def index():
-    return render_template('main/index.html', username = session.get('username'), isStudent = session.get('student'))
+    return showCoursesImpl(isAtHomePage=True)
 
 #LOGIC: in index.html, the links go to redirects so I can flash a message
 @myapp_obj.route('/redirect')
@@ -69,7 +69,15 @@ def people():
     return redirect('/auth/login')
 
 @myapp_obj.route('/courses', methods = ['GET', 'POST'])
-def showCourses():
+def showCoursesPage():
+    return showCoursesImpl(isAtHomePage=False)
+
+# @myapp_obj.route('/courses', methods = ['GET', 'POST'])
+def showCoursesImpl(isAtHomePage):
+    templateName = "main/courses.html"
+    if isAtHomePage:
+        templateName = "main/index.html"
+
     if "username" in session:
         courses = Course.query.all()
         isStudent = session.get('student')
@@ -111,7 +119,7 @@ def showCourses():
                     return redirect('/courses')
 
             #this is first page teacher will see
-            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm,coursesTaught=coursesTaught)
+            return render_template(templateName, username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm,coursesTaught=coursesTaught)
         else: #student view - make form for students to enroll in courses instead (enroll button per course)
             enrollForm = CourseSignUp()
             #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
@@ -147,7 +155,7 @@ def showCourses():
                             db_add_now(newEnroll)
                             flash('Succesfully enrolled!')
                     return redirect('/courses')
-            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
+            return render_template(templateName, username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
     #redirect non-users to log in first
     flash('You are not logged in!')
     return redirect('/auth/login')
