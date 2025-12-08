@@ -8,7 +8,7 @@ import time, sqlite3
 # BUG:(khanh): When the user does not exist in the db but logged in (cached by browser), the app crashes attempting to retreive the user's info from the DB
 
 #home page that shows links in our site
-@myapp_obj.route('/')
+@myapp_obj.route('/', methods = ['GET', 'POST'])
 def index():
     return showCoursesImpl(isAtHomePage=True)
 
@@ -119,7 +119,7 @@ def showCoursesImpl(isAtHomePage):
                     return redirect('/courses')
 
             #this is first page teacher will see
-            return render_template(templateName, username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm,coursesTaught=coursesTaught)
+            return render_template(templateName, username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm, coursesTaught=coursesTaught)
         else: #student view - make form for students to enroll in courses instead (enroll button per course)
             enrollForm = CourseSignUp()
             #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
@@ -155,7 +155,9 @@ def showCoursesImpl(isAtHomePage):
                             db_add_now(newEnroll)
                             flash('Succesfully enrolled!')
                     return redirect('/courses')
+            #first page students will see
             return render_template(templateName, username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
+
     #redirect non-users to log in first
     flash('You are not logged in!')
     return redirect('/auth/login')
