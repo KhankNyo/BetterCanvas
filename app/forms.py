@@ -25,7 +25,7 @@ class AnnouncementForm(FlaskForm):
 
 class CourseForm(FlaskForm):
     name = StringField('Course Name', validators=[DataRequired()])
-    description = StringField('Course Description')
+    description = TextAreaField('Course Description')
     units = IntegerField('Units Provided', validators=[DataRequired()])
     capacity = IntegerField('Maximum Students', validators=[DataRequired()])
     submit = SubmitField('Create Course')
