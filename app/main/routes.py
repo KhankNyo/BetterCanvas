@@ -2,7 +2,7 @@ from flask import render_template, request, flash, redirect, session
 from flask import current_app as myapp_obj
 from ..forms import AnnouncementForm, CourseForm, ResourceForm, CourseSignUp
 from ..models import Announcement, Student, Teacher, Course, Enrollment, Resource
-from app import g_DB as db
+from app import db_add_now, db_delete_now
 import time, sqlite3
 
 #home page that shows links in our site
@@ -33,8 +33,7 @@ def newFeature():
             if form.validate_on_submit():
                 flash("Post announced!")
                 newPost = Announcement(title=title, description=desc, timestamp=timestamp, announcer=username, email=email)
-                db.session.add(newPost)
-                db.session.commit()
+                db_add_now(newPost)
                 return redirect('/feature')
 
         posts = Announcement.query.all()
@@ -87,8 +86,7 @@ def showCourses():
                     #attach current teacher's id to course just made and add it to db
                     teacher = Teacher.query.filter_by(username=session.get("username")).first()
                     newCourse = Course(name=name, description=desc, units=unit, max_capacity=capacity, teacher_id=teacher.id)
-                    db.session.add(newCourse)
-                    db.session.commit()
+                    db_add_now(newCourse)
                     return redirect('/courses')
             #this is first page teacher will see
             return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=form)
@@ -109,33 +107,22 @@ def showCourses():
                         course.students_enrolled -= 1
                         student.units_enrolled -= course.units
                         #delete/drop already_enrolled tuple from relation Enrollment
-                        db.session.delete(already_enrolled)
-                        db.session.commit()
+                        db_delete_now(already_enrolled)
                         flash("Dropped the class!")
-                        return redirect('/courses')
                     else:
                         course = Course.query.filter_by(id=course_id).first()
-                        #update students units and course's enrollment count
-                        student.units_enrolled += course.units
-                        course.students_enrolled += 1
                         #check if it doesnt violate max unit allowance OR if there is no space in the class
                         if student.units_enrolled > 20:
                             flash('This course would put you over the unit limit (20). Drop another class to fit this one.')
-                            #undo changes and redirect
-                            student.units_enrolled -= course.units
-                            course.students_enrolled -= 1
-                            return redirect('/courses')
                         elif course.students_enrolled > course.max_capacity:
                             flash('This course is at max capacity. Sorry!.')
-                            #undo changes and redirect
-                            student.units_enrolled -= course.units
-                            course.students_enrolled -= 1
-                            return redirect('/courses')
-			#else, start a new enrollment
-                        newEnroll = Enrollment(student_id=student.id, course_id=course.id)
-                        db.session.add(newEnroll)
-                        db.session.commit()
-                        flash('Succesfully enrolled!')
+                        else:
+                            #update students units and course's enrollment count
+                            course.students_enrolled += 1
+                            student.units_enrolled += course.units
+                            newEnroll = Enrollment(student_id=student.id, course_id=course.id)
+                            db_add_now(newEnroll)
+                            flash('Succesfully enrolled!')
                     return redirect('/courses')
             return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
     #redirect non-users to log in first

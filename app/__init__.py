@@ -16,3 +16,14 @@ def create_app():
         g_DB.create_all()
 
     return myapp_obj
+
+'''Add something to the db and commit'''
+def db_add_now(thing):
+    g_DB.session.add(thing);
+    g_DB.session.commit();
+
+'''Delete something to the db and commit'''
+def db_delete_now(thing):
+    g_DB.session.delete(thing);
+    g_DB.session.commit();
+
