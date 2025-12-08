@@ -2,6 +2,5 @@ __MACOSX
 *.swp
 __pycache__
 .DS_Store
-*.db
 .nvimrc
 
