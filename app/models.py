@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 g_EMAIL_STRING_CAPACITY = 128
 g_NAME_STRING_CAPACITY = 64
 g_PASSWORD_STRING_CAPACITY = 64
-g_DESCRIPTION_STRING_CAPCITY = 1024
+g_DESCRIPTION_STRING_CAPACITY = 1024
 g_TIMESTAMP_STRING_CAPACITY = 64
 
 class Student(db.Model):
