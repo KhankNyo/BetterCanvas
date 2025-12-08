@@ -50,7 +50,7 @@
     <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
     {% if isStudent %}
       <p> Your Currently Enrolled Courses </p>
-      {% if studentCourses %}
+      {% if studentEnrollments %}
       <!-- Start of the table structure -->
       <table>
         <!-- Table Header Row -->
@@ -61,23 +61,27 @@
             <th>Professor</th>
             <th>Maximum Capacity</th>
             <th>Enrollment Count</th>
+            <th>Grade</th>
             <th>Actions</th>
           </tr>
         </thead>
         <!-- Table Body: Loop through the courses here -->
         <tbody>
-          {% for course in studentCourses %}
+          {% for enroll in studentEnrollments %}
             <tr>
-              <td>{{ course.name }}</td>
-              <td>{{ course.units }}</td>
-              <td>{{ course.teacher.username }}</td>
-              <td>{{ course.max_capacity }}</td>
-              <td>{{ course.students_enrolled }}</td>
+              <!-- Logic: enroll has attributes course_id, student_id and course_grade. If we want to reference
+              Course information, use enroll.courses. If we want to reference Student info, use enroll.students-->
+              <td>{{ enroll.courses.name }}</td>
+              <td>{{ enroll.courses.units }}</td>
+              <td>{{ enroll.courses.teacher.username }}</td>
+              <td>{{ enroll.courses.max_capacity }}</td>
+              <td>{{ enroll.courses.students_enrolled }}</td>
+              <td>{{ enroll.course_grade }} </td>
               <td>
                   <form action="" method="POST">
                         {{ enrollForm.hidden_tag() }}
                         <!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE ID -->
-                        <input type="hidden" name="course_id" value="{{course.id}}">
+                        <input type="hidden" name="course_id" value="{{enroll.courses.id}}">
                         <p>
                                 {{ enrollForm.submit(value="Drop") }}
                         </p>
@@ -88,6 +92,7 @@
         </tbody>
       </table>
       {% endif %}
+      <p> Units Enrolled In: {{ student.units_enrolled }} </p>
     {% endif %}
     <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
     <h2 class="animated-rainbow-text"> Course List: </h2>

@@ -94,12 +94,9 @@ def showCourses():
             return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, form=form)
         else: #student view - make form for students to enroll in courses instead (enroll button per course)
             enrollForm = CourseSignUp()
-            #also retrieve the enrolled courses by the student's id, then get those courses
+            #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
             student = Student.query.filter_by(username=session.get("username")).first()
-            #by JOIN-ing the Course relation with the Enrollment relation ON student_id = student.id, we get the student's courses
-            enrolledCourses = Course.query.join(Enrollment).filter(Enrollment.student_id == student.id)
-            studentCourses = enrolledCourses.all() #this is neccessary to turn into a list
-
+            studentEnrollments = student.enrollments
             #logic: when the 'Enroll' button is pressed, we want to get the student's id and course's id to add to Enrollments
             if request.method == 'POST':
                 #the data for the course id is in the request form
@@ -108,8 +105,9 @@ def showCourses():
                     already_enrolled = Enrollment.query.filter_by(student_id=student.id, course_id=course_id).first()
                     if already_enrolled:
                         course = Course.query.filter_by(id=course_id).first()
-                        if course:
-                            course.students_enrolled -= 1
+                        #update course enrollment count and student's units
+                        course.students_enrolled -= 1
+                        student.units_enrolled -= course.units
                         #delete/drop already_enrolled tuple from relation Enrollment
                         db.session.delete(already_enrolled)
                         db.session.commit()
@@ -117,15 +115,29 @@ def showCourses():
                         return redirect('/courses')
                     else:
                         course = Course.query.filter_by(id=course_id).first()
+                        #update students units and course's enrollment count
+                        student.units_enrolled += course.units
+                        course.students_enrolled += 1
+                        #check if it doesnt violate max unit allowance OR if there is no space in the class
+                        if student.units_enrolled > 20:
+                            flash('This course would put you over the unit limit (20). Drop another class to fit this one.')
+                            #undo changes and redirect
+                            student.units_enrolled -= course.units
+                            course.students_enrolled -= 1
+                            return redirect('/courses')
+                        elif course.students_enrolled > course.max_capacity:
+                            flash('This course is at max capacity. Sorry!.')
+                            #undo changes and redirect
+                            student.units_enrolled -= course.units
+                            course.students_enrolled -= 1
+                            return redirect('/courses')
+			#else, start a new enrollment
                         newEnroll = Enrollment(student_id=student.id, course_id=course.id)
                         db.session.add(newEnroll)
-                        if course:
-                            course.students_enrolled += 1
                         db.session.commit()
                         flash('Succesfully enrolled!')
                     return redirect('/courses')
-
-            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentCourses = studentCourses)
+            return render_template('main/courses.html', username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
     #redirect non-users to log in first
     flash('You are not logged in!')
     return redirect('/auth/login')

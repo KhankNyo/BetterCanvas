@@ -15,6 +15,8 @@ class Student(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
     units_enrolled = db.Column(db.Integer, default = 0)
+    #relationships
+    enrollments = db.relationship('Enrollment', backref="students")
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -55,6 +57,7 @@ class Course(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"), nullable=False)
     #this is to define a reference to Teacher table (ex: using myCourse.teacher.name)
     teacher = db.relationship('Teacher', backref='courses')
+    enrollments = db.relationship("Enrollment", backref="courses")
 
 class Enrollment(db.Model):
     #this table uses TWO foreign keys as a composite key
