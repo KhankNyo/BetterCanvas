@@ -54,7 +54,7 @@
       <p> Your Currently Enrolled Courses </p>
       {% if studentEnrollments %}
       <!-- Start of the table structure -->
-      <table>
+      <table class="cool-bg">
         <!-- Table Header Row -->
         <thead>
           <tr>
@@ -158,10 +158,10 @@
       </table>
     {% endif %}
     <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
-    <h2 class="animated-rainbow-text"> Course List: </h2>
+    <h2 class="animated-rainbow-text cool-bg"> Course List: </h2>
     <!-- This block is purely for printing the list of ALL courses in the database. -->
     {% for course in courses %}
-	<p>
+	<div class="cool-bg">
 		<p class="title">
 			<strong>{{course.name}}</strong>
 		</p>
@@ -182,7 +182,7 @@
 		{% endif %}
 
         ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
-	</p>
+	</div>
     {% endfor %}
 
 {% endblock %}

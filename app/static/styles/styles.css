@@ -97,3 +97,6 @@ textarea {
 .navbar-bg-color {
 	background-image: var(--navbar-background-color-image);
 }
+.cool-bg {
+	background-image: var(--background-color-image);
+}
