@@ -121,7 +121,7 @@ def showCourses():
                 #the data for the course id is in the request form
                 course_id = request.form.get('course_id')
                 if course_id:
-                    # NOTE(khanh): kinda sketchy, 'drop' button will submit a course to drop, 'enroll' button submits a None object
+                    # NOTE:(khanh): kinda sketchy, 'drop' button will submit a course to drop, 'enroll' button submits a None object
                     already_enrolled = Enrollment.query.filter_by(student_id=student.id, course_id=course_id).first()
                     if already_enrolled:
                         course = Course.query.filter_by(id=course_id).first()
@@ -180,6 +180,6 @@ def logout():
     return redirect("auth/signout")
 
 def getCurrentTime():
-    # NOTE(Khanh): timezones are a big and ugly mess, we'll assume the time from where the app is running
+    # NOTE:(Khanh): timezones are a big and ugly mess, we'll assume the time from where the app is running
     serverTimeToday = time.ctime()
     return serverTimeToday

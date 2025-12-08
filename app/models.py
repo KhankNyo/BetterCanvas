@@ -4,6 +4,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 g_EMAIL_STRING_CAPACITY = 128
 g_NAME_STRING_CAPACITY = 64
 g_PASSWORD_STRING_CAPACITY = 64
+g_DESCRIPTION_STRING_CAPCITY = 1024
+g_TIMESTAMP_STRING_CAPACITY = 64
 
 class Student(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
@@ -30,25 +32,25 @@ class Teacher(db.Model):
 
 class Announcement(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), nullable=True)
-    description = db.Column(db.String(1024), nullable=False)
-    timestamp = db.Column(db.String(64), nullable=False)
+    title = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=True)
+    description = db.Column(db.String(g_DESCRIPTION_STRING_CAPACITY), nullable=False)
+    timestamp = db.Column(db.String(g_TIMESTAMP_STRING_CAPACITY), nullable=False)
     announcer = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
     email = db.Column(db.String(g_EMAIL_STRING_CAPACITY), nullable=False)
 
 class Resource(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(64), nullable=True)
-    description = db.Column(db.String(1024), nullable=False)
-    file = db.Column(db.String(64), nullable=False)
-    timestamp = db.Column(db.String(64), nullable=False)
+    title = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=True)
+    description = db.Column(db.String(g_DESCRIPTION_STRING_CAPACITY), nullable=False)
+    file = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
+    timestamp = db.Column(db.String(g_TIMESTAMP_STRING_CAPACITY), nullable=False)
     announcer = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
     email = db.Column(db.String(g_EMAIL_STRING_CAPACITY), nullable=False)
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    description = db.Column(db.String(256), nullable = True)
+    name = db.Column(db.String(g_NAME_STRING_CAPACITY), nullable=False)
+    description = db.Column(db.String(g_DESCRIPTION_STRING_CAPACITY), nullable = True)
     units = db.Column(db.Integer, nullable=False)
     max_capacity = db.Column(db.Integer, nullable=False)
     students_enrolled = db.Column(db.Integer, default=0)
