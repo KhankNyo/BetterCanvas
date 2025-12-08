@@ -28,7 +28,7 @@ def login():
                 if user and check_password_hash(user.password, password):
                     add_or_update_user_in_local_session(name=username, is_student=is_student, email=user.email)
                     flash('Login Successful')
-                    return redirect('/feature')
+                    return redirect('/announcements')
                 else:
                     flash('Not successful, data missing or incorrect!')
                     return redirect('/auth/login')
@@ -65,7 +65,7 @@ def register():
                     db.session.commit()
                     add_or_update_user_in_local_session(name=username, is_student=True, email=email)
                 flash('Successfully registered! You are logged in!')
-                return redirect('/feature')
+                return redirect('/announcements')
 
     return render_template('auth/register.html', form=form)
 

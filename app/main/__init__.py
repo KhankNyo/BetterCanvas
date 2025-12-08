@@ -1,2 +1,2 @@
-from .routes import index, indexRedirect, newFeature, newFeatureRedirect, loginRedirect
+from .routes import * # khanh: can't be bothered
 

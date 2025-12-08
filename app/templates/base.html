@@ -46,38 +46,67 @@
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
 				<!-- {#
-					NOTE:(khanh): 
-						this is a realllyyyy stupid, idiotic and hacky way to set the active link on a navbar 
-						the appropriate file that wants an appropriate link to be active must have: 
-						{% block is_<name>_active %} active {% endblock %}
+					NOTE:(khanh): to set a link active on the status bar, set the appropriate variable to True before extending base, ie: 
+						{% set is_<what>_active = True %}
+						{% extends "base.html" %}
 				#} -->
-					<li class="nav-item {%block is_home_active %}{% endblock %}">
-						<a class="nav-link" href="/redirect"> Home <span class="sr-only">(current)</span></a>
+
+					{% macro redirectable_link(is_what_active, normal, redirect) %}
+						{% if is_what_active %}
+							{{redirect}}
+						{% else %}
+							{{normal}}
+						{% endif %}
+					{% endmacro %}
+
+					{% macro set_active_if(page) %}
+						{% if page %} active {% endif %}
+					{% endmacro %}
+
+					<li class="nav-item {{set_active_if(is_home_active)}}">
+						<a class="nav-link" href={{ redirectable_link(is_home_active, "/", "/redirect" )}} > 
+							Home 
+						<span class="sr-only">(current)</span></a>
 					</li>
-					<li class="nav-item {%block is_login_active %}{% endblock %}">
-						<a class="nav-link" href="/login_redirect"> Login </a>
+					<li class="nav-item {{set_active_if(is_login_active)}}">
+						<a class="nav-link" href="/login_redirect"> 
+							Login 
+						</a>
 					</li>
 					<!--{#  TODO:(khanh): special logic required for logout/login #}-->
-					<li class="nav-item {%block is_logout_active %}{% endblock %}">
-						<a class="nav-link" href="/logout"> Logout </a>
+					<li class="nav-item {{set_active_if(is_logout_active)}}">
+						<a class="nav-link" href="/logout"> 
+							Logout 
+						</a>
 					</li>
-					<li class="nav-item {%block is_feature_active %}{% endblock %}">
-						<a class="nav-link" href="/feature_redirect"> Feature </a>
+					<li class="nav-item {{set_active_if(is_announcements_active)}}">
+						<a class="nav-link" href={{redirectable_link(is_announcements_active, "/announcements", "/announcements_redirect")}}> 
+							Announcements 
+						</a>
 					</li>
-					<li class="nav-item {%block is_people_active %}{% endblock %}">
-						<a class="nav-link" href="/people"> People </a>
+
+					<li class="nav-item {{set_active_if(is_people_active)}}">
+						<a class="nav-link" href="/people"> 
+							People 
+						</a>
 					</li>
-					<li class="nav-item {%block is_courses_active %}{% endblock %}">
-						<a class="nav-link" href="/courses"> Courses </a>
+					<li class="nav-item {{set_active_if(is_courses_active)}}">
+						<a class="nav-link" href="/courses"> 
+							Courses 
+						</a>
 					</li>
-					<li class="nav-item {%block is_resources_active %}{% endblock %}">
-						<a class="nav-link" href="/resources"> Resources </a>
+					<li class="nav-item {{set_active_if(is_resources_active)}}">
+						<a class="nav-link" href="/resources"> 
+							Resources 
+						</a>
 					</li>
 				</ul>
+				<!-- NOTE:(khanh): do something with the search bar? 
 				<form class="form-inline my-2 my-lg-0">
 					<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
+				-->
 			</div>
 		</nav>
 		{% endblock %}

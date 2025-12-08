@@ -17,8 +17,8 @@ def indexRedirect():
     return redirect('/')
 
 #demo page to still work on
-@myapp_obj.route('/feature', methods = ['GET', 'POST'])
-def newFeature():
+@myapp_obj.route('/announcements', methods = ['GET', 'POST'])
+def announcements():
     form = AnnouncementForm()
     title = form.title.data
     desc = form.description.data
@@ -34,19 +34,19 @@ def newFeature():
                 flash("Post announced!")
                 newPost = Announcement(title=title, description=desc, timestamp=timestamp, announcer=username, email=email)
                 db_add_now(newPost)
-                return redirect('/feature')
+                return redirect('/announcements')
 
         posts = Announcement.query.all()
-        return render_template('main/features.html', username=username, isStudent=isStudent, posts=posts, form=form)
+        return render_template('main/announcements.html', username=username, isStudent=isStudent, posts=posts, form=form)
 
     flash('You are not logged in!')
     return redirect('/auth/login')
 
-@myapp_obj.route('/feature_redirect')
-def newFeatureRedirect():
+@myapp_obj.route('/announcements_redirect')
+def announcementsRedirect():
     if "username" in session:
         flash('Moved to announcements page!')
-    return redirect('/feature')
+    return redirect('/announcements')
 
 @myapp_obj.route('/login_redirect')
 def loginRedirect():
