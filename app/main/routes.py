@@ -5,6 +5,8 @@ from ..models import Announcement, Student, Teacher, Course, Enrollment, Resourc
 from app import db_add_now, db_delete_now
 import time, sqlite3
 
+# BUG:(khanh): When the user does not exist in the db but logged in (cached by browser), the app crashes attempting to retreive the user's info from the DB
+
 #home page that shows links in our site
 @myapp_obj.route('/')
 def index():
@@ -16,7 +18,6 @@ def indexRedirect():
     flash('You\'re already here!')
     return redirect('/')
 
-#demo page to still work on
 @myapp_obj.route('/announcements', methods = ['GET', 'POST'])
 def announcements():
     form = AnnouncementForm()
