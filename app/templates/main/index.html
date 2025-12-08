@@ -1,20 +1,6 @@
 {% extends "base.html" %}
-
-{% block nav %}
-	<h1> Welcome to Simpler Canvas! </h1>
-	<a href="/redirect"> Home Page </a><br>
-	<a href="/login_redirect"> Login </a><br>
-	<a href="/feature_redirect"> Announcements </a><br>
-	<a href="/people"> People </a><br>
-	<a href="/courses"> Courses </a> <br>
-    <a href="/resources"> Resources </a> <br>
-	<a href="/logout">Logout</a><br>
-	</nav>
-
-	<p> Click the links above to navigate our site! </p>
-{% endblock %}
+{% block is_home_active %} active {% endblock %}
 
 {% block content %}
 	<p> Simpler Canvas is a simplistic approach that is intuitive and welcoming to new students! This robust app easily communicates to students and instructors alike course information in an easy-to-understand format.</p>
-
 {% endblock %}
