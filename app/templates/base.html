@@ -21,70 +21,52 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 		<header> 
-			Simpler Canvas -
-			<a href="/"> HOME</a>
-			{% if username %} - Signed in as {{username}} (
-				{% if isStudent %} Student {% else %} Teacher {% endif %} )
+			{% if username %} 
+				Logged in as 
+				{% if isStudent %} student: {% else %} teacher: {% endif %} 
+				{{username}} 
+			{% else %}
+				Not logged in
 			{% endif %} 
 		</header>
 
-		{% with messages = get_flashed_messages() %}
-		{% if messages %}
-			{% for message in messages %}
-				<p>{{ message }}</p><br>
-			{% endfor %}
-		{% endif %}
-		{% endwith %}
 
 		{% block nav %}
+		<!-- {#
+			NOTE:(khanh): to set a link active on the status bar, set the appropriate variable to True before extending base, ie: 
+				{% set is_<what>_active = True %}
+				{% extends "base.html" %}
+		#} -->
+
+		{% macro redirectable_link(is_what_active, normal, redirect) %}
+			{% if is_what_active %}
+				{{redirect}}
+			{% else %}
+				{{normal}}
+			{% endif %}
+		{% endmacro %}
+
+		{% macro set_active_if(is_page_active) %}
+			{% if is_page_active %} active {% endif %}
+		{% endmacro %}
+
 		<!-- links go here for index.html -->
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
-			<a class="navbar-brand" href="#">Navbar</a>
+			<a class="navbar-brand" href={{redirectable_link(is_home_active, "/", "/redirect")}}>
+				Simpler Canvas
+			</a>
+
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-				<!-- {#
-					NOTE:(khanh): to set a link active on the status bar, set the appropriate variable to True before extending base, ie: 
-						{% set is_<what>_active = True %}
-						{% extends "base.html" %}
-				#} -->
-
-					{% macro redirectable_link(is_what_active, normal, redirect) %}
-						{% if is_what_active %}
-							{{redirect}}
-						{% else %}
-							{{normal}}
-						{% endif %}
-					{% endmacro %}
-
-					{% macro set_active_if(page) %}
-						{% if page %} active {% endif %}
-					{% endmacro %}
-
-					<li class="nav-item {{set_active_if(is_home_active)}}">
-						<a class="nav-link" href={{ redirectable_link(is_home_active, "/", "/redirect" )}} > 
-							Home 
-						<span class="sr-only">(current)</span></a>
-					</li>
-					<li class="nav-item {{set_active_if(is_login_active)}}">
-						<a class="nav-link" href="/login_redirect"> 
-							Login 
-						</a>
-					</li>
-					<!--{#  TODO:(khanh): special logic required for logout/login #}-->
-					<li class="nav-item {{set_active_if(is_logout_active)}}">
-						<a class="nav-link" href="/logout"> 
-							Logout 
-						</a>
-					</li>
 					<li class="nav-item {{set_active_if(is_announcements_active)}}">
 						<a class="nav-link" href={{redirectable_link(is_announcements_active, "/announcements", "/announcements_redirect")}}> 
 							Announcements 
 						</a>
 					</li>
-
 					<li class="nav-item {{set_active_if(is_people_active)}}">
 						<a class="nav-link" href="/people"> 
 							People 
@@ -100,6 +82,26 @@
 							Resources 
 						</a>
 					</li>
+
+					<!--{# NOTE:(khanh): 
+							logout will only display when the user has already logged in, 
+							login will only display when the user has not logged in yet
+					#}-->
+					{% if username %}
+						<li class="nav-item {{set_active_if(is_logout_active)}}">
+							<a class="nav-link" href="/logout"> 
+								Logout 
+							</a>
+						</li>
+					{% else %}
+						<li class="nav-item {{set_active_if(is_login_active)}}">
+							<a class="nav-link" href="/login_redirect"> 
+								Login 
+							</a>
+						</li>
+					{% endif %}
+
+
 				</ul>
 				<!-- NOTE:(khanh): do something with the search bar? 
 				<form class="form-inline my-2 my-lg-0">
@@ -110,6 +112,14 @@
 			</div>
 		</nav>
 		{% endblock %}
+
+		{% with messages = get_flashed_messages() %}
+		{% if messages %}
+			{% for message in messages %}
+				<p>{{ message }}</p><br>
+			{% endfor %}
+		{% endif %}
+		{% endwith %}
 
 		{% block content %} 
 		<!-- generalized content goes in this block -->
