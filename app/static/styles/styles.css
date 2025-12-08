@@ -1,6 +1,7 @@
 :root {
 	--font-color: #eeeeee;
 	--background-color-image: linear-gradient(to left top, #202045, #254040) /*#222222*/;
+	--navbar-background-color-image: linear-gradient(to left top, #E1AD01, #C76E00);
 	--header-font-color: var(--background-color);
 	--link-color: #4747ff;
 	--link-color-visited: #cb7cff;
@@ -91,4 +92,8 @@ textarea {
     56% { color: #00b9ff; } /* Blue */
     70% { color: #5d00ff; } /* Indigo */
     84% { color: #e800ff; } /* Violet */
+}
+
+.navbar-bg-color {
+	background-image: var(--navbar-background-color-image);
 }
