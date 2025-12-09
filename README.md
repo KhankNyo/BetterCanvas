@@ -2,7 +2,7 @@
 Run the command "git clone https://github.com/KhankNyo/BetterCanvas" in your terminal
 then cd into BetterCanvas directory. 
 Run the file run.py using python3 run.py in your terminal. Put in the link "http://127.0.0.1:5000/logout" in your browser. 
-### IMPORTANT: Make sure you are logged out on our website! Changes to the database were made.
+### IMPORTANT: Make sure you are logged out on our website (esp if you have been on it before and was logged in)! Changes to the database were made.
 Then, to access different parts of the website, please log in or register an account. Teacher and student accounts see different things on the website. 
 
 If you do not wish to register, input "tester" into the username and "password123" for the password (without the quotes). This logs you into a premade teacher account. The rest of the accounts found in the /people tab also have the password "password123" as well. 
