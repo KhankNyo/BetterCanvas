@@ -80,13 +80,13 @@
 							Resources 
 						</a>
 					</li>
-					<li class="nav-item {{set_active_if(is_resources_active)}}">
+					<li class="nav-item {{set_active_if(is_assignment_active)}}">
 						<a class="nav-link" href="/assignments">
 							Assignments
 						</a>
 					</li>
 					{% if not isStudent %}
-						<li class="nav-item {{set_active_if(is_resources_active)}}">
+						<li class="nav-item {{set_active_if(is_submissions_active)}}">
 							<a class="nav-link" href="/submissions">
 								Submissions
 							</a>
