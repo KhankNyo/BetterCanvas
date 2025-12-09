@@ -2,12 +2,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> You can 
+	<h1 class="bottom-divider"> You can 
 		<b class="animated-rainbow-text">view</b>
 		courses
 		<b class="animated-rainbow-text">here!</b>
 	</h1>
-
 	{% if isStudent %}
 		<p> Student View </p>
 	{% else %}
@@ -331,6 +330,149 @@
 			</form>
 			{% endif %}
 	</div>
-    {% endfor %}
+
+	<div class="cool-bg top-divider">
+		<br>
+		{% if isStudent %}
+		<!-- Logic: Show the list of courses a student is enrolled in - with its attributes and an option to drop -->
+		<p> Your Currently Enrolled Courses </p>
+		{% if studentEnrollments %}
+		<!-- Start of the table structure -->
+		<table class="cool-bg">
+			<!-- Table Header Row -->
+			<thead>
+				<tr>
+					<th>Course Name</th>
+					<th>Units</th>
+					<th>Professor</th>
+					<th>Maximum Capacity</th>
+					<th>Enrollment Count</th>
+					<th>Grade</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<!-- Table Body: Loop through the courses here -->
+			<tbody>
+				{% for enroll in studentEnrollments %}
+				<tr>
+					<!-- Logic: enroll has attributes course_id, student_id and course_grade. If we want to reference
+						Course information, use enroll.courses. If we want to reference Student info, use enroll.students-->
+						<td>{{ enroll.courses.name }}</td>
+						<td>{{ enroll.courses.units }}</td>
+						<td>{{ enroll.courses.teacher.username }}</td>
+						<td>{{ enroll.courses.max_capacity }}</td>
+						<td>{{ enroll.courses.students_enrolled }}</td>
+						<td>{{ enroll.course_grade }} </td>
+						<td>
+							<form action="" method="POST">
+								{{ enrollForm.hidden_tag() }}
+								<!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE ID -->
+								<input type="hidden" name="course_id" value="{{enroll.courses.id}}">
+								<p>
+								{{ enrollForm.submit(value="Drop") }}
+								</p>
+							</form>
+						</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% endif %}
+		</div>
+
+		<p> Units Enrolled In: {{ student.units_enrolled }} </p>
+	{% else %} <!-- else if teacher -->
+		<!-- Logic: Show a list of courses. In each course, show a list of students enrolled. Show an option to drop. -->
+		<p> Courses You Are Instructing: </p>
+		<table>
+			<!-- Table Header Row -->
+			<thead>
+				<tr>
+					<th>Course Name</th>
+					<th>Units</th>
+					<th>Maximum Capacity</th>
+					<th>Enrollment Count</th>
+					<th>Students
+					</th>
+				</tr>
+			</thead>
+			<!-- Table Body -->
+			<tbody>
+				{% if coursesTaught %}
+				{% for course in coursesTaught %}
+				<tr>
+					<td> {{ course.name }} </td>
+					<td> {{ course.units }} </td>
+					<td> {{ course.max_capacity }} </td>
+					<td> {{ course.students_enrolled }} </td>
+					<td> 
+						<table>
+							<!-- Sub-table Header Row -->
+							<thead>
+								<tr>
+									<th>Username</th>
+									<th>Email</th>
+									<th>Grade</th>
+									<th>Actions</th>
+								</tr>
+							</thead>
+							{% for enroll in course.enrollments %}
+							<tr>
+								<td> {{ enroll.students.username }} </td>
+								<td> {{ enroll.students.email }} </td>
+								<td> {{ enroll.course_grade }} </td>
+								<td>
+									<form action="" method="POST">
+										{{ dropForm.hidden_tag() }}
+										<!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE AND STUDENT ID -->
+										<input type="hidden" name="course_id" value="{{enroll.courses.id}}"> 
+										<input type="hidden" name="student_id" value="{{enroll.students.id}}">
+										<p>
+										{{ dropForm.submit(value="Drop") }}
+										</p>
+									</form>
+								</td>
+							</tr>
+							{% endfor %}
+						</table> 
+					</td>
+				</tr>
+				{% endfor %}
+				{% endif %}
+				<p> --------------------------------------- </p>
+			</tbody>
+		</table>
+	{% endif %}
+
+	<div class="bottom-divider">
+		<div class="top-divider bottom-divider cool-bg">
+			<br>
+			<h2 class="animated-rainbow-text"> Course List: </h2>
+		</div>
+
+		<!-- This block is purely for printing the list of ALL courses in the database. -->
+		{% for course in courses %}
+		<div class="cool-bg bottom-divider">
+			<p class="title">
+			<strong>{{course.name}}</strong>
+			</p>
+			<textarea readonly class="announce_ronly">{{course.description}}</textarea><br>
+			<p class="title">  <strong> Units: {{course.units}} </strong> </p>
+			<p class="title"> Professor: {{course.teacher.username}} </p>
+			<p class="title"> Maximum Capacity: {{course.max_capacity}} </p>
+			<p class="title"> Enrollment Count: {{course.students_enrolled}} </p>
+			{% if isStudent %}
+			<form action="" method="POST">
+				{{ enrollForm.hidden_tag() }}
+				<!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE ID -->
+				<input type="hidden" name="course_id" value="{{course.id}}">
+				<p>
+				{{ enrollForm.submit() }}
+				</p>
+			</form>
+			{% endif %}
+		</div>
+	</div>
+	{% endfor %}
 
 {% endblock %}

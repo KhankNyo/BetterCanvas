@@ -21,11 +21,11 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 		{% block nav %}
-		<!-- {#
+		{#
 			NOTE:(khanh): to set a link active on the status bar, set the appropriate variable to True before extending base, ie: 
 				{% set is_<what>_active = True %}
 				{% extends "base.html" %}
-		#} -->
+		#}
 
 		{% macro redirectable_link(is_what_active, normal, redirect) %}
 			{% if is_what_active %}
@@ -56,44 +56,53 @@
 							Announcements 
 						</a>
 					</li>
+
 					<li class="nav-item {{set_active_if(is_people_active)}}">
 						<a class="nav-link" href="/people"> 
 							People 
 						</a>
 					</li>
+
+					<li class="nav-item dropdown {{set_active_if(is_courses_active)}}">
+						<a class="nav-link" href="/courses"> 
+							Courses 
+						</a>
+					</li>
+					{#
 					<li class="nav-item {{set_active_if(is_courses_active)}}">
 						<a class="nav-link" href="/courses"> 
 							Courses 
 						</a>
 					</li>
+					#}
 					<li class="nav-item {{set_active_if(is_resources_active)}}">
 						<a class="nav-link" href="/resources"> 
 							Resources 
 						</a>
 					</li>
-                                        <li class="nav-item {{set_active_if(is_resources_active)}}">
-                                                <a class="nav-link" href="/assignments">
-                                                        Assignments
-                                                </a>
-                                        </li>
-                                        {% if not isStudent %}
-                                        <li class="nav-item {{set_active_if(is_resources_active)}}">
-                                                <a class="nav-link" href="/submissions">
-                                                        Submissions
-                                                </a>
-                                        </li>
-                                        {% endif %}
-					<!--{# NOTE:(khanh): 
-							logout will only display when the user has already logged in, 
-							login will only display when the user has not logged in yet
-					#}-->
+					<li class="nav-item {{set_active_if(is_resources_active)}}">
+						<a class="nav-link" href="/assignments">
+							Assignments
+						</a>
+					</li>
+					{% if not isStudent %}
+						<li class="nav-item {{set_active_if(is_resources_active)}}">
+							<a class="nav-link" href="/submissions">
+								Submissions
+							</a>
+						</li>
+					{% endif %}
+					{# NOTE:(khanh): 
+						logout will only display when the user has already logged in, 
+						login will only display when the user has not logged in yet
+					#}
 					{% if username %}
 						<li class="nav-item {{set_active_if(is_logout_active)}}">
 							<a class="nav-link" href="/logout"> 
 								Logout 
 							</a>
 						</li>
-					{% else %}
+						{% else %}
 						<li class="nav-item {{set_active_if(is_login_active)}}">
 							<a class="nav-link" href="/login_redirect"> 
 								Login 
