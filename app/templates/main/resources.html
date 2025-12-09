@@ -6,7 +6,7 @@
 <h1> Resources </h1>
 <p> Here you can upload resources for your fellow students and find resources as well. </p>
 
-<form action="" method="POST" id="announce">
+<form action="" method="POST" id="announce" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <p> <u>Upload a Resource</u> </p>
 		<p>
@@ -25,8 +25,12 @@
                 <span style="color: red;"> [{{error}}] </span>
                 {% endfor %}
             <br>
-            <label for="fileToUpload">Select file to upload:</label><br>
-        <input type="file" name="fileToUpload" id="fileToUpload"><br><br>
+            {{ form.file.label }}<br>
+            {{ form.file() }}
+            {% for error in form.file.errors %}
+                <span style="color: red;"> [{{error}}] </span>
+            {% endfor %}
+            <br>
             {{ form.submit() }}
         </p>
     </form>
@@ -45,7 +49,10 @@
 			<strong>{{post.title}}</strong>
 		</p>
 		<textarea readonly class="announce_ronly">{{post.description}}</textarea>
-        <a id="link" download>File</a>
+                <br>
+                <a href="{{ url_for('resourceFile', filename=post.file) }}" target="_blank">
+                  {{ post.file }}
+                </a>
 		<br>
         -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	</p>

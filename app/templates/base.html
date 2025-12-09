@@ -71,7 +71,18 @@
 							Resources 
 						</a>
 					</li>
-
+                                        <li class="nav-item {{set_active_if(is_resources_active)}}">
+                                                <a class="nav-link" href="/assignments">
+                                                        Assignments
+                                                </a>
+                                        </li>
+                                        {% if not isStudent %}
+                                        <li class="nav-item {{set_active_if(is_resources_active)}}">
+                                                <a class="nav-link" href="/submissions">
+                                                        Submissions
+                                                </a>
+                                        </li>
+                                        {% endif %}
 					<!--{# NOTE:(khanh): 
 							logout will only display when the user has already logged in, 
 							login will only display when the user has not logged in yet
