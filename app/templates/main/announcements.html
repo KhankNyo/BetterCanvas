@@ -2,54 +2,58 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> You can 
-		<b class="animated-rainbow-text">read</b>
-		announcements
-		<b class="animated-rainbow-text">here!</b>
-	</h1>
+	<div class="cool-bg bottom-line">
+		<h1 class="bottom-line"> You can 
+			<b class="animated-rainbow-text">read</b>
+			announcements
+			<b class="animated-rainbow-text">here!</b>
+		</h1>
 
-    {% if isStudent %}
-        <p> Student View </p>
-    {% else %}
-    <form action="" method="POST" id="announce">
-        {{ form.hidden_tag() }}
-        <p> <u>Create an Announcement</u> </p>
-		<p>
-			<b class="title">
-				{{ form.title.label }}
-			</b>
+		<div>
+			{% if isStudent %}
+				<p> Student View </p>
+			{% else %}
+				<form action="" method="POST" id="announce">
+					{{ form.hidden_tag() }}
+					<p> <u>Create an Announcement</u> </p>
+					<p>
+						<b class="title">
+							{{ form.title.label }}
+						</b>
+						<br>
+						{{ form.title(size=32) }}
+							{% for error in form.title.errors %}
+							<span style="color: red;"> [{{error}}] </span>
+							{% endfor %}
+						<br>
+						{{ form.description.label }} <br>
+						{{ form.description(size=200) }}
+							{% for error in form.description.errors %}
+							<span style="color: red;"> [{{error}}] </span>
+							{% endfor %}
+						<br>
+						{{ form.submit() }}
+					</p>
+				</form>
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="cool-bg top-line">
+		<h2 class="title cool-bg"> Recent Announcements: </h2>
+		<!-- TO DO STUFF HERE -->
+		{% for post in posts %}
+		<div class="cool-bg bottom-line">
+			<p class="small-note">
+				{{post.timestamp}}<br>
+				{{post.announcer}}, {{post.email}}
+			</p>
+			<p class="title">
+				<strong>{{post.title}}</strong>
+			</p>
+			<textarea readonly class="announce_ronly">{{post.description}}</textarea>
 			<br>
-			{{ form.title(size=32) }}
-				{% for error in form.title.errors %}
-				<span style="color: red;"> [{{error}}] </span>
-				{% endfor %}
-			<br>
-            {{ form.description.label }} <br>
-            {{ form.description(size=200) }}
-                {% for error in form.description.errors %}
-                <span style="color: red;"> [{{error}}] </span>
-                {% endfor %}
-			<br>
-            {{ form.submit() }}
-        </p>
-    </form>
-    {% endif %}
-    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
-    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
-    <h2 class="title cool-bg"> Recent Announcements: </h2>
-    <!-- TO DO STUFF HERE -->
-    {% for post in posts %}
-	<div class="cool-bg">
-		<p class="small-note">
-			{{post.timestamp}}<br>
-			{{post.announcer}}, {{post.email}}
-		</p>
-		<p class="title">
-			<strong>{{post.title}}</strong>
-		</p>
-		<textarea readonly class="announce_ronly">{{post.description}}</textarea>
-		<br>
-        ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+		</div>
 	</div>
     {% endfor %}
 
