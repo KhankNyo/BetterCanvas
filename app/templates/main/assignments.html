@@ -1,0 +1,123 @@
+{% set is_courses_active = True %}
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> You can 
+		<b class="animated-rainbow-text">view</b>
+		assignments
+		<b class="animated-rainbow-text">here!</b>
+	</h1>
+    {% if isStudent %}
+      <p> Student View </p>
+    {% else %}
+      <p> Teacher View </p>
+    {% endif %}
+    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+    {% if isStudent %}
+      <!-- Logic: Show the list of courses a student is enrolled in - then show the assignments for each -->
+      <p> Your Courses </p>
+      {% if courses %}
+      <!-- Start of the table structure -->
+      <table class="cool-bg">
+        <!-- Table Header Row -->
+        <thead>
+          <tr>
+            <th>Course Name</th>
+            <th>Assignment Description</th>
+            <th>Points Worth</th>
+            <th>Score</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <!-- Table Body: Loop through the courses here -->
+        <tbody>
+          {% for course in courses %}
+            {% for assignment in course.assignments %}
+            <tr>
+              <td>{{ course.name }}</td>
+              <td>{{ assignment.description }}</td>
+              <td>{{ assignment.points }}</td>
+              <td>
+              <!-- in jinja2, | is a pipe operator. We can use it to simulate the . in traditional property calls -->
+              {% if assignment.submissions | length > 0 %}
+                <!-- this will retrieve the highest score using a max filter in jinja2 html -->
+                {{ (assignment.submissions | max(attribute='points_given')).points_given }}</td>
+              {% else %}
+                0.00
+              {% endif %}
+              </td>
+              <td>
+                  <form action="" method="POST" enctype="multipart/form-data">
+                        {{ submissionForm.hidden_tag() }}
+                        <!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE ID -->
+                        <input type="hidden" name="assignment_id" value="{{assignment.id}}">
+                        <p>
+                                {{ submissionForm.file_handle.label }} <br>
+                                {{ submissionForm.file_handle(size=1) }}
+                                    {% for error in submissionForm.file_handle.errors %}
+                                      <span style="color: red;"> [{{error}}] </span>
+                                    {% endfor %}
+                        <p>
+                                {{ submissionForm.submit() }}
+                        </p>
+                   </form>
+               </td>
+            </tr>
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    {% else %} <!-- else if teacher -->
+        <!-- Logic: Show a list of courses. In each course, display a create assignment form. -->
+      <p> Courses You Instruct: </p>
+      {% if courses %}
+        {% for course in courses %}
+          <p> Course Name: {{ course.name }} -- Assignments Below -- </p><br>
+            <table>
+            <!-- Table Header Row -->
+              <thead>
+                <tr>
+                  <th>Assignment Description</th>
+                  <th>Points Worth</th>
+                </tr>
+              </thead>
+            <!-- Table Body -->
+              <tbody>
+              {% for assignment in course.assignments %}
+                <tr>
+                  <td>{{assignment.description}}</td>
+                  <td>{{assignment.points}}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table><br>
+          <p> Create a New Assignment for this course: </p>
+          <form action="" method="POST">
+            {{ assignmentForm.hidden_tag() }}
+            <!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE AND STUDENT ID -->
+            <input type="hidden" name="course_id" value="{{course.id}}">
+            <p>
+              {{ assignmentForm.description.label }}
+              {{ assignmentForm.description(size=255) }}
+                {% for error in assignmentForm.description.errors %}
+                  <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+            </p>
+            <p>
+              {{ assignmentForm.points.label }}
+              {{ assignmentForm.points() }}
+                {% for error in assignmentForm.points.errors %}
+                  <span style="color: red;"> [{{error}}] </span>
+                {% endfor %}
+            </p>
+            <p>
+              {{ assignmentForm.submit() }}
+            </p> 
+          </form>
+        <p> --------------------------------------------------------------------------------------------------------------------------------</p>
+        {% endfor %}
+      {% endif %}
+    {% endif %}
+    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+{% endblock %}

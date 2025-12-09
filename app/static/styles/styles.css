@@ -100,9 +100,10 @@ textarea {
 .cool-bg {
 	background-image: var(--background-color-image);
 }
-.bottom-line {
-	border-bottom: solid white;
+
+.bottom-divider {
+	border-bottom: 1px solid white;
 }
-.top-line {
-	border-top: solid white;
+.top-divider {
+	border-top: 1px solid white;
 }

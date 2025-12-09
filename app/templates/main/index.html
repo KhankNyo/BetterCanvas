@@ -8,13 +8,13 @@
 {% block content %}
 	<p> Simpler Canvas is a simplistic approach that is intuitive and welcoming to new students! This robust app easily communicates to students and instructors alike course information in an easy-to-understand format.</p>
 
-	<h1 class="bottom-line"> You can 
+	<h1 class="bottom-divider"> You can 
 		<b class="animated-rainbow-text">view</b>
 		courses
 		<b class="animated-rainbow-text">here!</b>
 	</h1>
 
-	<div class="cool-bg bottom-line">
+	<div class="cool-bg bottom-divider">
 		<br>
 		{% if isStudent %}
 			<p> Student View </p>
@@ -59,7 +59,7 @@
 		{% endif %}
 	</div>
 
-	<div class="cool-bg top-line">
+	<div class="cool-bg top-divider">
 		<br>
 		{% if isStudent %}
 		<!-- Logic: Show the list of courses a student is enrolled in - with its attributes and an option to drop -->
@@ -172,15 +172,15 @@
 		</table>
 	{% endif %}
 
-	<div class="bottom-line">
-		<div class="top-line bottom-line cool-bg">
+	<div class="bottom-divider">
+		<div class="top-divider bottom-divider cool-bg">
 			<br>
 			<h2 class="animated-rainbow-text"> Course List: </h2>
 		</div>
 
 		<!-- This block is purely for printing the list of ALL courses in the database. -->
 		{% for course in courses %}
-		<div class="cool-bg bottom-line">
+		<div class="cool-bg bottom-divider">
 			<p class="title">
 			<strong>{{course.name}}</strong>
 			</p>

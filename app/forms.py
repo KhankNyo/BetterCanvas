@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileRequired, FileAllowed
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, FileField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 
 class LoginForm(FlaskForm):
     username = StringField('User Name', validators=[DataRequired()])
@@ -36,5 +37,27 @@ class CourseSignUp(FlaskForm):
 class ResourceForm(FlaskForm):
     title = StringField('Title')
     description = TextAreaField('Description', validators=[DataRequired()])
-    file = FileField('File')
+    file = FileField('File', validators=[
+        FileRequired(),
+        FileAllowed(['jpg', 'png', 'pdf', 'txt'], 'Images, Text Documents and PDFs only!')
+    ])
     submit = SubmitField('Post')
+
+class AssignmentCreate(FlaskForm):
+    description = TextAreaField('Description', validators=[DataRequired(), Length(min=10)])
+    points = IntegerField('Maximum Points', validators=[DataRequired()])
+    submit = SubmitField('Post Assignment')
+
+class SubmissionForm(FlaskForm):
+    file_handle = FileField('Upload File', validators=[
+        FileRequired(),
+        FileAllowed(['jpg', 'png', 'pdf', 'txt'], 'Images, Text Documents and PDFs only!')
+    ])
+    submit = SubmitField('Submit Assignment')
+
+class GradeForm(FlaskForm):
+    score = IntegerField('Score', validators=[DataRequired()])
+    submit = SubmitField('Post Submission Score')
+
+class Button(FlaskForm):
+    submit = SubmitField()

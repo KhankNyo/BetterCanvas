@@ -2,8 +2,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-	<div class="cool-bg bottom-line">
-		<h1 class="bottom-line"> You can 
+	<div class="cool-bg bottom-divider">
+		<h1 class="bottom-divider"> You can 
 			<b class="animated-rainbow-text">read</b>
 			announcements
 			<b class="animated-rainbow-text">here!</b>
@@ -39,11 +39,11 @@
 		</div>
 	</div>
 
-	<div class="cool-bg top-line">
+	<div class="cool-bg top-divider">
 		<h2 class="title cool-bg"> Recent Announcements: </h2>
 		<!-- TO DO STUFF HERE -->
 		{% for post in posts %}
-		<div class="cool-bg bottom-line">
+		<div class="cool-bg bottom-divider">
 			<p class="small-note">
 				{{post.timestamp}}<br>
 				{{post.announcer}}, {{post.email}}

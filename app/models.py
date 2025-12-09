@@ -19,6 +19,7 @@ class Student(db.Model):
     units_enrolled = db.Column(db.Integer, default = 0)
     #relationships
     enrollments = db.relationship('Enrollment', backref="students")
+    submissions = db.relationship('Submission', backref="students")
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -57,12 +58,28 @@ class Course(db.Model):
     #foreign key ensures data integrity: a course cannot be added with a
     #teacherID that does not exist in Teacher table first
     teacher_id = db.Column(db.Integer, db.ForeignKey("teacher.id"), nullable=False)
-    #this is to define a reference to Teacher table (ex: using myCourse.teacher.name)
+    #this is to define a reference to Teacher table and Enrollment table (ex: using myCourse.teacher.name)
+    #i.e. relationships
     teacher = db.relationship('Teacher', backref='courses')
     enrollments = db.relationship("Enrollment", backref="courses")
+    assignments = db.relationship("Assignment", backref='courses')
 
 class Enrollment(db.Model):
     #this table uses TWO foreign keys as a composite key
     course_id = db.Column(db.Integer, db.ForeignKey("course.id"), primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey("student.id"), primary_key=True)
     course_grade = db.Column(db.Float, default = 0.00)
+
+class Assignment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey("course.id"), nullable=False)
+    description = db.Column(db.String(g_DESCRIPTION_STRING_CAPACITY), nullable=False)
+    points = db.Column(db.Integer, nullable=False)
+    submissions = db.relationship("Submission", backref="assignments")
+
+class Submission(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    assignment_id = db.Column(db.Integer, db.ForeignKey("assignment.id"))
+    student_id = db.Column(db.Integer, db.ForeignKey("student.id"))
+    file_handle = db.Column(db.String(255), nullable=False)
+    points_given = db.Column(db.Integer, default = 0)
