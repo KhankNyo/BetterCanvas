@@ -2,84 +2,91 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> You can 
-		<b class="animated-rainbow-text">GRADE</b>
-		assignments
-		<b class="animated-rainbow-text">here!</b>
-    </h1>
-    <p> Teacher View </p>
-    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
-      <!-- Logic: Show a list of courses. Then show the list of assignments. Then show the list of submissions. -->
-      <p> Assignments You Published: </p>
-      {% if courses %}
-        {% for course in courses %}
-          <p> Course Name: {{ course.name }} -- Assignments Below -- </p><br>
-            <table>
-            <!-- Table Header Row -->
-              <thead>
-                <tr>
-                  <th>Assignment Description</th>
-                  <th>Points Worth</th>
-                  <th>Submissions</th>
-                </tr>
-              </thead>
-            <!-- Table Body -->
-              <tbody>
-              {% for assignment in course.assignments %}
-                <tr>
-                  <td>{{assignment.description}}</td>
-                  <td>{{assignment.points}}</td>
-                  <td>
-                    <table>
-                    <!-- Sub-table Header Row -->
-                      <thead>
-                        <tr>
-                          <th>Submission</th>
-                          <th>Student ID</th>
-                          <th>Score</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      {% for submission in assignment.submissions %}
-                      <tr>
-                        <td>
-                          <a href="{{ url_for('uploadedFile', filename=submission.file_handle) }}" target="_blank"> 
-                            {{ submission.file_handle }}
-                          </a> 
-                        </td>
-                        <td> {{ submission.student_id }} </td>
-                        <td> {{ submission.points_given }} </td>
-                        <td>
-                          <form action="" method="POST">
-                            {{ form.hidden_tag() }}
-                            <!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE,STUDENT,AND SUBMISSION ID -->
-                            <input type="hidden" name="course_id" value="{{assignment.course_id}}">
-                            <input type="hidden" name="student_id" value="{{submission.student_id}}">
-                            <input type="hidden" name="submission_id" value="{{submission.id}}">
-                            <p>
-                              {{ form.score.label }}
-                              {{ form.score() }}
-                                {% for error in form.score.errors %}
-                                  <span style="color: red;"> [{{error}}] </span>
-                                {% endfor %}
-                            </p>
-                            <p>
-                              {{ form.submit() }}
-                            </p>                            
-                          </form>
-                        </td>
-                      </tr>
-                      {% endfor %}
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table><br>
-          <p> --------------------------------------------------------------------------------------------------------------------------------</p>
-        {% endfor %}
-      {% endif %}
-    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+	<div class="cool-bg bottom-divider">
+		<h1> You can 
+			<b class="animated-rainbow-text">GRADE</b>
+			assignments
+			<b class="animated-rainbow-text">here!</b>
+		</h1>
+	<p> Teacher View </p>
+	</div>
+
+	<!-- Logic: Show a list of courses. Then show the list of assignments. Then show the list of submissions. -->
+	<br>
+	<p> Assignments You Published: </p>
+	{% if courses %}
+		{% for course in courses %}
+			<div class="cool-bg bottom-divider">
+				<p> Course Name: {{ course.name }} -- Assignments Below -- </p><br>
+				<table>
+					<!-- Table Header Row -->
+					<thead>
+						<tr>
+							<th>Assignment Description</th>
+							<th>Points Worth</th>
+							<th>Submissions</th>
+						</tr>
+					</thead>
+					<!-- Table Body -->
+					<tbody>
+						{% for assignment in course.assignments %}
+							<tr class="cool-bg top-divider">
+								<td>{{assignment.description}}</td>
+								<td>{{assignment.points}}</td>
+								<td>
+									<table>
+										<!-- Sub-table Header Row -->
+										<thead>
+											<tr>
+												<th>Submission</th>
+												<th>Student ID</th>
+												<th>Score</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for submission in assignment.submissions %}
+												<tr>
+													<td>
+														<a href="{{ url_for('uploadedFile', filename=submission.file_handle) }}" target="_blank"> 
+															{{ submission.file_handle }}
+														</a> 
+													</td>
+													<td> {{ submission.student_id }} </td>
+													<td> {{ submission.points_given }} </td>
+													<td>
+														<form action="" method="POST">
+															{{ form.hidden_tag() }}
+															<!-- CRITICAL TO ADD THIS TO RETRIEVE CURRENT COURSE,STUDENT,AND SUBMISSION ID -->
+															<input type="hidden" name="course_id" value="{{assignment.course_id}}">
+															<input type="hidden" name="student_id" value="{{submission.student_id}}">
+															<input type="hidden" name="submission_id" value="{{submission.id}}">
+															<p>
+															{{ form.score.label }}
+															{{ form.score() }}
+															{% for error in form.score.errors %}
+																<span style="color: red;"> [{{error}}] </span>
+															{% endfor %}
+															</p>
+															<p>
+															{{ form.submit() }}
+															</p>                            
+														</form>
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table><br>
+			</div>
+		{% endfor %}
+	{% else %}
+		<p> 
+			None, you have no courses!
+		</p>
+	{% endif %}
 {% endblock %}
