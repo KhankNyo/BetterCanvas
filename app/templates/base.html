@@ -1,3 +1,112 @@
+
+{% macro redirectable_link(is_what_active, normal, redirect) %}
+	{% if is_what_active %}
+		"/{{redirect}}"
+	{% else %}
+		"/{{normal}}"
+	{% endif %}
+{% endmacro %}
+
+{% macro set_active_if(is_page_active) %}
+	{% if is_page_active %} active {% endif %}
+{% endmacro %}
+
+{% macro dropdown_item(is_page_active) %}
+	"nav-link navbar-bg-color {{set_active_if(is_page_active)}}"
+{% endmacro %}
+
+{% macro announcements_navbar_item() %}
+	<li class="nav-item {{set_active_if(is_announcements_active)}}">
+		<a class="nav-link" href={{redirectable_link(is_announcements_active, announcements, announcements_redirect)}}> 
+			Announcements 
+		</a>
+	</li>
+{% endmacro %}
+
+{% macro people_navbar_item() %}
+	<li class="nav-item {{set_active_if(is_people_active)}}">
+		<a class="nav-link" href="/people"> 
+			People 
+		</a>
+	</li>
+{% endmacro %}
+
+{% macro courses_navbar_item() %}
+	{# RANT:(khanh): My FUCKING GOD, Bootstrap does come with a dropdown menu, but WITHOUT hover. 
+		It would actually be SIMPLER to make hoverable dropdown menu in pure CSS and HTML. 
+		God I fucking hate web programming
+	#}
+	<li class="nav-item {{set_active_if(is_courses_active)}}">
+		<a class="nav-link" href="/courses"> 
+			Courses 
+		</a>
+	</li>
+	{# TODO:(khanh): dropdown menu for course creation, list
+	<li class="nav-item dropdown">
+		<button class="nav-link dropbtn">
+			Courses
+		</button>
+		<div class="navbar-bg-color dropdown-content">
+			<a class={{dropdown_item()}} href="#">
+				Create New
+			</a>
+			<a class={{dropdown_item()}} href="#">
+				My Courses
+			</a>
+		</div>
+	</li>
+	#}
+{% endmacro %}
+
+{% macro resources_navbar_item() %}
+	<li class="nav-item {{set_active_if(is_resources_active)}}">
+		<a class="nav-link" href="/resources"> 
+			Resources 
+		</a>
+	</li>
+{% endmacro %}
+
+{% macro assignments_navbar_item() %}
+	<li class="nav-item {{set_active_if(is_assignment_active)}}">
+		<a class="nav-link" href="/assignments">
+			Assignments
+		</a>
+	</li>
+{% endmacro %}
+
+{% macro submissions_navbar_item() %}
+	{% if not isStudent %}
+		<li class="nav-item {{set_active_if(is_submissions_active)}}">
+			<a class="nav-link" href="/submissions">
+				Submissions
+			</a>
+		</li>
+	{% endif %}
+{%endmacro%}
+
+{% macro logout_or_login_navbar_item() %}
+	{# NOTE:(khanh): 
+		logout will only display when the user has already logged in, 
+		login will only display when the user has not logged in yet
+	#}
+	{% if username %}
+		<li class="nav-item {{set_active_if(is_logout_active)}}">
+			<a class="nav-link" href="/logout"> 
+				Logout 
+			</a>
+		</li>
+	{% else %}
+		<li class="nav-item {{set_active_if(is_login_active)}}">
+			<a class="nav-link" href="/login_redirect"> 
+				Login 
+			</a>
+		</li>
+	{% endif %}
+{% endmacro %}
+
+
+
+
 <html>
 	<head>
 		<!-- Required meta tags -->
@@ -10,6 +119,7 @@
 
 		<title> Better Canvas </title>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/styles.css') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/dropdown.css') }}">
 	</head>
 	<body>
 
@@ -27,21 +137,9 @@
 				{% extends "base.html" %}
 		#}
 
-		{% macro redirectable_link(is_what_active, normal, redirect) %}
-			{% if is_what_active %}
-				{{redirect}}
-			{% else %}
-				{{normal}}
-			{% endif %}
-		{% endmacro %}
-
-		{% macro set_active_if(is_page_active) %}
-			{% if is_page_active %} active {% endif %}
-		{% endmacro %}
-
 		<!-- links go here for index.html -->
 		<nav class="navbar navbar-expand-lg navbar-light navbar-bg-color">
-			<a class="navbar-brand" href={{redirectable_link(is_home_active, "/", "/redirect")}}>
+			<a class="navbar-brand" href={{redirectable_link(is_home_active, "", redirect)}}>
 				Simpler Canvas
 			</a>
 
@@ -51,73 +149,21 @@
 
 			<div class="collapse navbar-collapse" id="navbarSupportedContent">
 				<ul class="navbar-nav mr-auto">
-					<li class="nav-item {{set_active_if(is_announcements_active)}}">
-						<a class="nav-link" href={{redirectable_link(is_announcements_active, "/announcements", "/announcements_redirect")}}> 
-							Announcements 
-						</a>
-					</li>
-
-					<li class="nav-item {{set_active_if(is_people_active)}}">
-						<a class="nav-link" href="/people"> 
-							People 
-						</a>
-					</li>
-
-					<li class="nav-item dropdown {{set_active_if(is_courses_active)}}">
-						<a class="nav-link" href="/courses"> 
-							Courses 
-						</a>
-					</li>
-					{#
-					<li class="nav-item {{set_active_if(is_courses_active)}}">
-						<a class="nav-link" href="/courses"> 
-							Courses 
-						</a>
-					</li>
-					#}
-					<li class="nav-item {{set_active_if(is_resources_active)}}">
-						<a class="nav-link" href="/resources"> 
-							Resources 
-						</a>
-					</li>
-					<li class="nav-item {{set_active_if(is_assignment_active)}}">
-						<a class="nav-link" href="/assignments">
-							Assignments
-						</a>
-					</li>
-					{% if not isStudent %}
-						<li class="nav-item {{set_active_if(is_submissions_active)}}">
-							<a class="nav-link" href="/submissions">
-								Submissions
-							</a>
-						</li>
-					{% endif %}
-					{# NOTE:(khanh): 
-						logout will only display when the user has already logged in, 
-						login will only display when the user has not logged in yet
-					#}
-					{% if username %}
-						<li class="nav-item {{set_active_if(is_logout_active)}}">
-							<a class="nav-link" href="/logout"> 
-								Logout 
-							</a>
-						</li>
-						{% else %}
-						<li class="nav-item {{set_active_if(is_login_active)}}">
-							<a class="nav-link" href="/login_redirect"> 
-								Login 
-							</a>
-						</li>
-					{% endif %}
-
+					{{announcements_navbar_item()}}
+					{{people_navbar_item()}}
+					{{courses_navbar_item()}}
+					{{resources_navbar_item()}}
+					{{assignments_navbar_item()}}
+					{{submissions_navbar_item()}}
+					{{logout_or_login_navbar_item()}}
 
 				</ul>
-				<!-- NOTE:(khanh): do something with the search bar? 
+				{# NOTE:(khanh): do something with the search bar? 
 				<form class="form-inline my-2 my-lg-0">
 					<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 				</form>
-				-->
+				#}
 			</div>
 		</nav>
 		{% endblock %}
