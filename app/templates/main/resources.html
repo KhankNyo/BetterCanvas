@@ -6,57 +6,62 @@
 <h1> Resources </h1>
 <p> Here you can upload resources for your fellow students and find resources as well. </p>
 
-<form action="" method="POST" id="announce" enctype="multipart/form-data">
-        {{ form.hidden_tag() }}
-        <p> <u>Upload a Resource</u> </p>
+<div class="cool-bg bottom-divider top-divider"
+	<form action="" method="POST" id="announce" enctype="multipart/form-data">
+		{{ form.hidden_tag() }}
+		<p> <u>Upload a Resource</u> </p>
 		<p>
-			<b class="title">
-				{{ form.title.label }}
-			</b>
-			<br>
-			{{ form.title(size=32) }}
-				{% for error in form.title.errors %}
-				<span style="color: red;"> [{{error}}] </span>
-				{% endfor %}
-			<br>
-            {{ form.description.label }} <br>
-            {{ form.description(size=200) }}
-                {% for error in form.description.errors %}
-                <span style="color: red;"> [{{error}}] </span>
-                {% endfor %}
-            <br>
-            {{ form.file.label }}<br>
-            {{ form.file() }}
-            {% for error in form.file.errors %}
-                <span style="color: red;"> [{{error}}] </span>
-            {% endfor %}
-            <br>
-            {{ form.submit() }}
-        </p>
-    </form>
-
-<p> ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ </p>
-<p> ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ </p>
-
-    <h2 class="title"> Uploaded Resources: </h2>
-    {% for post in posts %}
-	<p>
-		<p class="small-note">
-			{{post.timestamp}}<br>
-			{{post.announcer}}, {{post.email}}
-		</p>
-		<p class="title">
-			<strong>{{post.title}}</strong>
-		</p>
-		<textarea readonly class="announce_ronly">{{post.description}}</textarea>
-                <br>
-                <a href="{{ url_for('resourceFile', filename=post.file) }}" target="_blank">
-                  {{ post.file }}
-                </a>
+		<b class="title">
+			{{ form.title.label }}
+		</b>
 		<br>
-        -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	</p>
-    {% endfor %}
+		{{ form.title(size=32) }}
+		{% for error in form.title.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+		{{ form.description.label }} <br>
+		{{ form.description(size=200) }}
+		{% for error in form.description.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+		{{ form.file.label }}<br>
+		{{ form.file() }}
+		{% for error in form.file.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+		{{ form.submit() }}
+		</p>
+	</form>
+</div>
+
+
+<div class="cool-bg top-divider">
+	<br>
+	<h2 class="title"> 
+		Uploaded Resources: 
+	</h2>
+
+	{% for post in posts %}
+		<div class="cool-bg bottom-divider">
+			<p class="small-note">
+				{{post.timestamp}}<br>
+				{{post.announcer}}, {{post.email}}
+			</p>
+			<p class="title">
+				<strong>{{post.title}}</strong>
+			</p>
+			<textarea readonly class="announce_ronly">{{post.description}}</textarea>
+			<br>
+			<a href="{{ url_for('resourceFile', filename=post.file) }}" target="_blank">
+				{{ post.file }}
+			</a>
+			<br>
+		</div>
+	{% endfor %}
+</div>
 
 
 {% endblock %}

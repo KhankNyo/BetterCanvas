@@ -7,49 +7,52 @@
 		courses
 		<b class="animated-rainbow-text">here!</b>
 	</h1>
-	{% if isStudent %}
-		<p> Student View </p>
-	{% else %}
-		<!-- Course creation for non-student view -->
-		<form action="" method="POST" id="courseCreate">
-			{{ form.hidden_tag() }}
-			<p> <u>Create a Course</u> </p>
-			<p>
-			<b class="title">
-				{{ form.name.label }}
-			</b>
-			<br>
-			{{ form.name(size=32) }}
-			{% for error in form.name.errors %}
-			<span style="color: red;"> [{{error}}] </span>
-			{% endfor %}
-			<br>
-			{{ form.description.label }} <br>
-			{{ form.description(size=200) }}
-			{% for error in form.description.errors %}
-			<span style="color: red;"> [{{error}}] </span>
-			{% endfor %}
-			<br>
-                  
-			{{ form.units.label }}
-			{{ form.units(size=1) }}
-			{% for error in form.units.errors %}
-			<span style="color: red;"> [{{error}}] </span>
-			{% endfor %}
-			<br>
 
-			{{ form.capacity.label }}
-			{{ form.capacity(size=1) }}
-			{% for error in form.capacity.errors %}
-			<span style="color: red;"> [{{error}}] </span>
-			{% endfor %}
-                        <br>
- 
-                        {{ form.submit() }}
-                        <br>
-                </form>
+	<div class="bottom-divider">
+		{% if isStudent %}
+			<p> Student View </p>
+		{% else %}
+			<!-- Course creation for non-student view -->
+			<form action="" method="POST" id="courseCreate">
+				{{ form.hidden_tag() }}
+				<p> <u>Create a Course</u> </p>
+				<p>
+				<b class="title">
+					{{ form.name.label }}
+				</b>
+				<br>
+				{{ form.name(size=32) }}
+				{% for error in form.name.errors %}
+				<span style="color: red;"> [{{error}}] </span>
+				{% endfor %}
+				<br>
+				{{ form.description.label }} <br>
+				{{ form.description(size=200) }}
+				{% for error in form.description.errors %}
+				<span style="color: red;"> [{{error}}] </span>
+				{% endfor %}
+				<br>
+
+				{{ form.units.label }}
+				{{ form.units(size=1) }}
+				{% for error in form.units.errors %}
+				<span style="color: red;"> [{{error}}] </span>
+				{% endfor %}
+				<br>
+
+				{{ form.capacity.label }}
+				{{ form.capacity(size=1) }}
+				{% for error in form.capacity.errors %}
+				<span style="color: red;"> [{{error}}] </span>
+				{% endfor %}
+				<br>
+
+				{{ form.submit() }}
+				<br>
+			</form>
         {% endif %}
-    <p> ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- </p>
+	</div>
+
       <!--old format delete <!-- comments to restore
       {% if isStudent %} -->
       <!-- Logic: Show the list of courses a student is enrolled in - with its attributes and an option to drop -->
@@ -310,7 +313,7 @@
 
     <!-- This block is purely for printing the list of ALL courses in the database. -->
     {% for course in courses %}
-	<div class="cool-bg bottom-divider">
+		<div class="cool-bg bottom-divider">
 			<p class="title">
 				<strong>{{course.name}}</strong>
 			</p>
@@ -329,7 +332,8 @@
 				</p>
 			</form>
 			{% endif %}
-	</div>
+		</div>
+	{% endfor %}
 
 	<div class="cool-bg top-divider">
 		<br>
@@ -472,7 +476,7 @@
 			</form>
 			{% endif %}
 		</div>
+		{% endfor %}
 	</div>
-	{% endfor %}
 
 {% endblock %}
