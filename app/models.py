@@ -1,11 +1,59 @@
 from app import g_DB as db
 from werkzeug.security import generate_password_hash, check_password_hash
+from enum import Enum
+import json
 
 g_EMAIL_STRING_CAPACITY = 128
 g_NAME_STRING_CAPACITY = 64
 g_PASSWORD_STRING_CAPACITY = 64
 g_DESCRIPTION_STRING_CAPACITY = 1024
 g_TIMESTAMP_STRING_CAPACITY = 64
+
+class UserType(Enum):
+    NOT_LOGGED_IN = 0
+    STUDENT = 1
+    TEACHER = 2
+
+'''Represents the user in session and associated data'''
+class UserData:
+    def __init__(
+            self, 
+            type: UserType = UserType.NOT_LOGGED_IN, 
+            name: str = "", 
+            email: str = "", 
+            courses: list = []
+    ):
+        self.type = type
+        self.name = name
+        self.email = email
+        self.courses = courses
+    '''For passing this into Jinja'''
+    def as_dict(self):
+        return vars(self)
+        # return self.__dict__
+
+
+'''
+# NOTE:(khanh): maybe instead of having 2 separate classes, 
+# have one generic user class that combined Student and Teacher, 
+# because half of the data overlaps 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Colum(db.Integer, nullable=False) # UserType, determines whether the user is a teacher or student
+    name = db.Colum(db.String(g_NAME_STRING_CAPACITY), unique=True, nullable=False)
+    email = db.Column(db.String(g_EMAIL_STRING_CAPACITY), nullable=False)
+    password = db.Column(db.String(g_PASSWORD_STRING_CAPACITY), nullable=False)
+
+    student_units_enrolled = db.Column(db.Integer, default = 0)
+    student_enrollments = db.relationship('Enrollment', backref="students")
+    student_submissions = db.relationship('Submission', backref="students")
+
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+'''
+
 
 class Student(db.Model):
     id =  db.Column(db.Integer, primary_key=True)
