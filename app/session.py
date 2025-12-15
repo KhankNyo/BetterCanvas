@@ -16,7 +16,7 @@ def session_add_current_user_locally(name, isStudent, email):
     user_type = UserType.TEACHER
     if isStudent:
         user_type = UserType.STUDENT
-    courses = __get_associated_course_from_user(name, isStudent, email)
+    courses = __get_courses_associated_with_user(name, isStudent, email)
     session['userobj'] = UserData(user_type, name, email, courses).as_dict()
 
 
@@ -47,7 +47,7 @@ def session_get_current_user_dict():
     result = session['userobj']
     return result
 
-def __get_associated_courses_from_user(name, is_student) -> list:
+def __get_courses_associated_with_user(name, is_student) -> list:
     course_iter = { }
     if is_student:
         user = Student.query.filter_by(username=name).first()
