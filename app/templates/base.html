@@ -47,6 +47,7 @@
 	</li>
 	{# TODO:(khanh): dropdown menu for course creation, list
 		ok shit this requires a fuck ton of rewrite, can't be bothered to do this at 3:30am rn
+	#}
 
 	<li class="nav-item dropdown {{set_active_if(is_course_list_active or is_course_create_active)}}">
 		<button class="nav-link dropbtn">
@@ -67,7 +68,6 @@
 			{% endif %}
 		</div>
 	</li>
-	#}
 {% endmacro %}
 
 {% macro resources_navbar_item() %}

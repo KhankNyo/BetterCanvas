@@ -1,8 +1,8 @@
-from flask import render_template, request, flash, redirect, session, url_for, send_from_directory
+from flask import request, flash, redirect, session, url_for, send_from_directory
 from flask import current_app as myapp_obj
 from ..forms import AnnouncementForm, CourseForm, ResourceForm, CourseSignUp, AssignmentCreate, Button, SubmissionForm, GradeForm
 from ..models import Announcement, Student, Teacher, Course, Enrollment, Resource, Assignment, Submission
-from app import db_add_now, db_delete_now, g_DB as db
+from app import db_add_now, db_delete_now, db_commit, app_render_template
 from werkzeug.utils import secure_filename
 import time, sqlite3, os
 
@@ -39,7 +39,7 @@ def announcements():
                 return redirect('/announcements')
 
         posts = Announcement.query.all()
-        return render_template('main/announcements.html', username=username, isStudent=isStudent, posts=posts, form=form)
+        return app_render_template('main/announcements.html', username=username, isStudent=isStudent, posts=posts, form=form)
 
     flash('You are not logged in!')
     return redirect('/auth/login')
@@ -65,7 +65,7 @@ def people():
     if "username" in session:
         teachers = Teacher.query.all()
         students = Student.query.all()
-        return render_template('main/people.html', username = session.get('username'), isStudent = session.get('student'), students = students, teachers = teachers)
+        return app_render_template('main/people.html', username = session.get('username'), isStudent = session.get('student'), students = students, teachers = teachers)
     flash('You are not logged in!')
     return redirect('/auth/login')
 
@@ -83,7 +83,7 @@ def showCoursesImpl(isAtHomePage):
         courses = Course.query.all()
         isStudent = session.get('student')
         username = session.get('username')
-	#if a teacher, make form for teachers to create a course and send it render_template
+	#if a teacher, make form for teachers to create a course and send it app_render_template
         if not isStudent: #form to get for teachers
             courseForm = CourseForm()
             name = courseForm.name.data
@@ -120,7 +120,7 @@ def showCoursesImpl(isAtHomePage):
                     return redirect('/courses')
 
             #this is first page teacher will see
-            return render_template(templateName, username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm, coursesTaught=coursesTaught)
+            return app_render_template(templateName, username=username, isStudent=isStudent, courses=courses, form=courseForm, dropForm=dropForm, coursesTaught=coursesTaught)
         else: #student view - make form for students to enroll in courses instead (enroll button per course)
             enrollForm = CourseSignUp()
             #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
@@ -157,7 +157,7 @@ def showCoursesImpl(isAtHomePage):
                             flash('Succesfully enrolled!')
                     return redirect('/courses')
             #first page students will see
-            return render_template(templateName, username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
+            return app_render_template(templateName, username=username, isStudent=isStudent, courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
 
     #redirect non-users to log in first
     flash('You are not logged in!')
@@ -188,7 +188,7 @@ def resources():
 
         posts = Resource.query.all()
 
-        return render_template('main/resources.html', username=username, posts=posts, form=form, isStudent=isStudent)
+        return app_render_template('main/resources.html', username=username, posts=posts, form=form, isStudent=isStudent)
     flash('You are not logged in!')
     return redirect('/auth/login')
 
@@ -224,7 +224,7 @@ def assignments():
                     return redirect('/assignments')
 
             username = session.get('username')
-            return render_template('main/assignments.html', courses=courses, submissionForm=submission, isStudent=isStudent, username=username)
+            return app_render_template('main/assignments.html', courses=courses, submissionForm=submission, isStudent=isStudent, username=username)
 
         else:
             teacher = Teacher.query.filter_by(username=session.get("username")).first()
@@ -237,13 +237,14 @@ def assignments():
                 points = createForm.points.data
                 course_id = request.form.get('course_id')
                 if course_id:
+                    # nice
                     newAss = Assignment(course_id=course_id, description=desc, points=points)
                     db_add_now(newAss)
                     flash('New assignment has been posted!')
                     return redirect('/assignments')
 
             username = session.get('username')
-            return render_template('main/assignments.html', courses=courses, assignmentForm=createForm, isStudent=isStudent, username=username)
+            return app_render_template('main/assignments.html', courses=courses, assignmentForm=createForm, isStudent=isStudent, username=username)
 
     #redirect non-users to log in first
     flash('You are not logged in!')
@@ -276,12 +277,12 @@ def submissions():
                         course = Course.query.filter_by(id=course_id).first()
                         submissionToUpdate.points_given = newScore
                         calculateStudentGrade(student, course)
-                        db.session.commit()
+                        db_commit()
                         flash('New score has been submitted.')
                         return redirect('/submissions')
 
             username = session.get('username')
-            return render_template('main/submissions.html', courses=courses, form=gradingForm, username=username)
+            return app_render_template('main/submissions.html', courses=courses, form=gradingForm, username=username)
 
     #redirect non-users to log in first
     flash('You are not logged in!')

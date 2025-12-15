@@ -1,8 +1,9 @@
-from flask import render_template, request, flash, redirect, session
+from flask import request, flash, redirect, session
 from flask import current_app as myapp_obj
 from ..forms import LoginForm, RegistrationForm, SignOutForm
 from ..models import Student, Teacher
-from app import g_DB as db
+from ..session import *
+from app import db_add_now, app_render_template
 from werkzeug.security import check_password_hash
 import flask_login
 
@@ -33,7 +34,7 @@ def login():
                     flash('Not successful, data missing or incorrect!')
                     return redirect('/auth/login')
         #this render is the FIRST render for new users
-        return render_template('auth/login.html', form = form)
+        return app_render_template('auth/login.html', form = form)
 
 @myapp_obj.route('/auth/register', methods = ['GET', 'POST'])
 def register():
@@ -55,29 +56,24 @@ def register():
                 if isTeacher:
                     new_teacher = Teacher(username=username, email=email)
                     new_teacher.set_password(password)
-                    db.session.add(new_teacher)
-                    db.session.commit()
+                    db_add_now(new_teacher)
                     add_or_update_user_in_local_session(name=username, is_student=False, email=email)
                 else:
                     new_student = Student(username=username, email=email)
                     new_student.set_password(password)
-                    db.session.add(new_student)
-                    db.session.commit()
+                    db_add_now(new_student)
                     add_or_update_user_in_local_session(name=username, is_student=True, email=email)
                 flash('Successfully registered! You are logged in!')
                 return redirect('/announcements')
 
-    return render_template('auth/register.html', form=form)
+    return app_render_template('auth/register.html', form=form)
 
 @myapp_obj.route('/auth/signout', methods = ['GET'])
 def signout():
     if "username" not in session:
         flash('You are not logged in.')
     else:
-        # remove user's data in the session, except for flashed messages
-        for key in list(session.keys()):
-            if not key.startswith('_'):
-                session.pop(key, None)
+        session_remove_current_user()
         flash('You are now logged out.')
     return redirect('/')
 

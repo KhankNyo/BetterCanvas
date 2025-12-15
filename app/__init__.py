@@ -1,12 +1,13 @@
-from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from .config import create_app_config
-import os
-
 g_DB = SQLAlchemy()
 
-def create_app():
+from flask import Flask, render_template
+from .config import create_app_config
+from .session import session_get_current_user_dict
+import os
 
+
+def create_app():
     myapp_obj = Flask(__name__)
     create_app_config(myapp_obj);
 
@@ -21,8 +22,6 @@ def create_app():
         from .auth import routes
         from .main import routes
         g_DB.create_all()
-
-
     return myapp_obj
 
 '''Add something to the db and commit'''
@@ -35,3 +34,12 @@ def db_delete_now(thing):
     g_DB.session.delete(thing);
     g_DB.session.commit();
 
+def db_commit():
+    g_DB.session.commit();
+
+'''NOTE:(khanh): MUST CALL THIS INSTEAD OF render_template!!!!!
+    Because I passed in a UserData object into the base html. This enables the dropdown menu to work
+    Pass arguments like how you pass arguments to render_template
+'''
+def app_render_template(file_name, *args, **kw_args):
+    return render_template(file_name, *args, **kw_args, userdata=session_get_current_user_dict())
