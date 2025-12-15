@@ -9,32 +9,29 @@ import flask_login
 
 @myapp_obj.route('/auth/login', methods = ['GET', 'POST'])
 def login():
-    #check if the current session is already active
-    if session.get('username'):
+    if session_current_user_is_logged_in():
         flash('You are already logged in.')
         return redirect('/')
-    else:
-        form = LoginForm()
-        if request.method == 'POST':
-            if form.validate_on_submit():
-                #ADD LOGIC HERE (like check user from database, etc)
-                username= form.username.data
-                password = form.password.data
-                #check if the user data is in Student or Teacher tables
-                is_student = True
-                user=Student.query.filter_by(username=username).first()
-                if not user:
-                    user=Teacher.query.filter_by(username=username).first()
-                    is_student = False
-                if user and check_password_hash(user.password, password):
-                    add_or_update_user_in_local_session(name=username, is_student=is_student, email=user.email)
-                    flash('Login Successful')
-                    return redirect('/announcements')
-                else:
-                    flash('Not successful, data missing or incorrect!')
-                    return redirect('/auth/login')
-        #this render is the FIRST render for new users
-        return app_render_template('auth/login.html', form = form)
+
+    form = LoginForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        #ADD LOGIC HERE (like check user from database, etc)
+        userdata, user = session_find_user_by_name(form.username.data)
+        if not user:
+            flash(f'No user named \'{form.username.data}\', perhaps you wanted to sign in?')
+            return redirect('/auth/login')
+
+        if not check_password_hash(user.password, form.password.data):
+            flash('Wrong password, try again.')
+            return redirect('/auth/login')
+
+        session_update_current_user(userdata)
+        flash('Login Successful')
+        return redirect('/announcements')
+
+    #this render is the FIRST render for new users
+    return app_render_template('auth/login.html', form = form)
+
 
 @myapp_obj.route('/auth/register', methods = ['GET', 'POST'])
 def register():
@@ -57,12 +54,12 @@ def register():
                     new_teacher = Teacher(username=username, email=email)
                     new_teacher.set_password(password)
                     db_add_now(new_teacher)
-                    add_or_update_user_in_local_session(name=username, is_student=False, email=email)
+                    session_add_current_user_locally(name=username, is_student=False, email=email)
                 else:
                     new_student = Student(username=username, email=email)
                     new_student.set_password(password)
                     db_add_now(new_student)
-                    add_or_update_user_in_local_session(name=username, is_student=True, email=email)
+                    session_add_current_user_locally(name=username, isStudent=True, email=email)
                 flash('Successfully registered! You are logged in!')
                 return redirect('/announcements')
 
@@ -70,16 +67,10 @@ def register():
 
 @myapp_obj.route('/auth/signout', methods = ['GET'])
 def signout():
-    if "username" not in session:
+    if not session_current_user_is_logged_in():
         flash('You are not logged in.')
     else:
         session_remove_current_user()
         flash('You are now logged out.')
     return redirect('/')
-
-
-def add_or_update_user_in_local_session(name, is_student, email):
-    session['username'] = name
-    session['student'] = is_student
-    session['email'] = email
 

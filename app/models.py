@@ -1,7 +1,6 @@
 from app import g_DB as db
 from werkzeug.security import generate_password_hash, check_password_hash
-from enum import Enum
-import json
+from enum import IntEnum
 
 g_EMAIL_STRING_CAPACITY = 128
 g_NAME_STRING_CAPACITY = 64
@@ -9,7 +8,7 @@ g_PASSWORD_STRING_CAPACITY = 64
 g_DESCRIPTION_STRING_CAPACITY = 1024
 g_TIMESTAMP_STRING_CAPACITY = 64
 
-class UserType(Enum):
+class UserType(IntEnum):
     NOT_LOGGED_IN = 0
     STUDENT = 1
     TEACHER = 2
@@ -18,19 +17,19 @@ class UserType(Enum):
 class UserData:
     def __init__(
             self, 
-            type: UserType = UserType.NOT_LOGGED_IN, 
+            usertype: UserType = UserType.NOT_LOGGED_IN, 
             name: str = "", 
             email: str = "", 
-            courses: list = []
+            course_names: list = []
     ):
-        self.type = type
+        self.type = usertype
         self.name = name
         self.email = email
-        self.courses = courses
+        self.course_names = course_names
+
     '''For passing this into Jinja'''
     def as_dict(self):
-        return vars(self)
-        # return self.__dict__
+        return self.__dict__
 
 
 '''

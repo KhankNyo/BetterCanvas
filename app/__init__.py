@@ -42,4 +42,6 @@ def db_commit():
     Pass arguments like how you pass arguments to render_template
 '''
 def app_render_template(file_name, *args, **kw_args):
-    return render_template(file_name, *args, **kw_args, userdata=session_get_current_user_dict())
+    userdata = session_get_current_user_dict()
+    print(userdata)
+    return render_template(file_name, *args, **kw_args, userdata=userdata)
