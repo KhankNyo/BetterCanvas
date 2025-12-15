@@ -1,0 +1,5 @@
+NOTE: these profiles are used for testing login, logout and ui
+tester - password123 - perm: teacher
+student1 - password123 - perm: student
+
+
