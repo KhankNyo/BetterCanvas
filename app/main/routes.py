@@ -230,7 +230,6 @@ def init_main_routes(myapp_obj):
     def logout():
         return redirect("auth/signout")
 
-<<<<<<< HEAD
     @myapp_obj.route('/assignments', methods = ['GET', 'POST'])
     def assignments():
         if "username" in session:
@@ -355,27 +354,10 @@ def init_main_routes(myapp_obj):
         #now update the student's course grade with it (exists in Enrollment table)
         enrollment = Enrollment.query.filter_by(course_id=course.id, student_id=student.id).first()
         enrollment.course_grade = formatGrade #all done!
-=======
-def calculateStudentGrade(student, course):
-    #LOGIC: sum up the points for course in one variable, sum up the score of the course in another. Grade = score/coursePoints
-    score = 0
-    coursePoints = 0
-    courseAssignments = course.assignments
-    for assignment in courseAssignments:
-        #retrieve submission and increment values
-        submission = Submission.query.filter_by(assignment_id=assignment.id, student_id=student.id).first()
-        score += submission.points_given
-        coursePoints += assignment.points
-    rawGrade = (score/coursePoints)*100
-    formatGrade = "{:.2f}".format(rawGrade)
-    #now update the student's course grade with it (exists in Enrollment table)
-    enrollment = Enrollment.query.filter_by(course_id=course.id, student_id=student.id).first()
-    enrollment.course_grade = formatGrade #all done!
 
-def forceUserToLogIn():
-    flash('You are not logged in!')
-    return redirect('/auth/login')
+    def forceUserToLogIn():
+        flash('You are not logged in!')
+        return redirect('/auth/login')
 
-def dummyNopFn():
-    return
->>>>>>> main
+    def dummyNopFn():
+        return

@@ -7,8 +7,6 @@ from ..session import *
 from werkzeug.security import check_password_hash
 import flask_login
 
-<<<<<<< HEAD
-
 def init_auth_routes(myapp_obj):
 
     from app import db_add_now, app_render_template
