@@ -7,7 +7,8 @@ def client():
     #this will force the tests to use a clean, empty DB for EVERY test
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['TESTING'] = True
-    app.config['WTF_CRSF_ENABLED'] = False
+    app.config['WTF_CSRF_ENABLED'] = False
+    app.config['SECRET_KEY'] = 'testing-key'
 
     with app.app_context():
         ## SETUP ##

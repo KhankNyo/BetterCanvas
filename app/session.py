@@ -16,7 +16,7 @@ def session_add_current_user_locally(name, isStudent, email):
     user_type = UserType.TEACHER
     if isStudent:
         user_type = UserType.STUDENT
-    courses = __get_courses_associated_with_user(name, isStudent, email)
+    courses = __get_courses_associated_with_user(name, isStudent)
     session['userobj'] = UserData(user_type, name, email, courses).as_dict()
 
 

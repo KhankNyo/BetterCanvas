@@ -12,7 +12,7 @@ def init_main_routes(myapp_obj):
     #home page that shows links in our site
     @myapp_obj.route('/', methods = ['GET', 'POST'])
     def index():
-        return showCoursesImpl(isAtHomePage=True)
+        return redirect('/auth/login')
 
     #LOGIC: in index.html, the links go to redirects so I can flash a message
     @myapp_obj.route('/redirect')
@@ -22,6 +22,7 @@ def init_main_routes(myapp_obj):
 
     @myapp_obj.route('/announcements', methods = ['GET', 'POST'])
     def announcements():
+        print(f"DEBUG(ROUTE): {dict(session)}") #this is for testing purposes
         form = AnnouncementForm()
         title = form.title.data
         desc = form.description.data

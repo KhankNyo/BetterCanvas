@@ -59,7 +59,7 @@ def init_auth_routes(myapp_obj):
                         new_teacher = Teacher(username=username, email=email)
                         new_teacher.set_password(password)
                         db_add_now(new_teacher)
-                        session_add_current_user_locally(name=username, is_student=False, email=email)
+                        session_add_current_user_locally(name=username, isStudent=False, email=email)
                     else:
                         new_student = Student(username=username, email=email)
                         new_student.set_password(password)
