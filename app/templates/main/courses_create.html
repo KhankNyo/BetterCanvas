@@ -1,6 +1,52 @@
+{# NOTE:(khanh): 
+	This page prompts the teacher to create a course
+#}
 {% set is_courses_create_active = True %}
 {% extends "base.html" %}
 
 {% block content %}
+{% if user.type == UserType.TEACHER %}
+	{# NOTE:(khanh): Bryan's code #}
+	<form action="" method="POST" id="courseCreate">
+		{{ form.hidden_tag() }}
+		<p> <u>Create a Course</u> </p>
+		<p>
+		<b class="title">
+			{{ form.name.label }}
+		</b>
+		<br>
+		{{ form.name(size=32) }}
+		{% for error in form.name.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+		{{ form.description.label }} <br>
+		{{ form.description(size=200) }}
+		{% for error in form.description.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+
+		{{ form.units.label }}
+		{{ form.units(size=1) }}
+		{% for error in form.units.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+
+		{{ form.capacity.label }}
+		{{ form.capacity(size=1) }}
+		{% for error in form.capacity.errors %}
+		<span style="color: red;"> [{{error}}] </span>
+		{% endfor %}
+		<br>
+
+		{{ form.submit() }}
+		<br>
+	</form>
+{% else %}
+	UNREACHABLE CODE IN courses_create.html!!!!!!!!!!!!!!! 
+	BAD BAD BAD!!!!
+{% endif %}
 {% endblock %}
 
