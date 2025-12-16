@@ -4,6 +4,7 @@ g_DB = SQLAlchemy()
 from flask import Flask, render_template
 from .config import create_app_config
 from .session import session_get_current_user_dict
+from .models import UserType
 import os, sys
 
 
@@ -51,6 +52,5 @@ def db_commit():
     Pass arguments like how you pass arguments to render_template
 '''
 def app_render_template(file_name, *args, **kw_args):
-    userdata = session_get_current_user_dict()
-    print(userdata)
-    return render_template(file_name, *args, **kw_args, userdata=userdata)
+    user = session_get_current_user_dict()
+    return render_template(file_name, *args, **kw_args, user=user, UserType=UserType)

@@ -17,12 +17,14 @@ class UserType(IntEnum):
 class UserData:
     def __init__(
             self, 
-            usertype: UserType = UserType.NOT_LOGGED_IN, 
+            type: UserType = UserType.NOT_LOGGED_IN, 
+            id: int = 0,
             name: str = "", 
             email: str = "", 
             course_names: list = []
     ):
-        self.type = usertype
+        self.type = type
+        self.id = id
         self.name = name
         self.email = email
         self.course_names = course_names
@@ -30,6 +32,9 @@ class UserData:
     '''For passing this into Jinja'''
     def as_dict(self):
         return self.__dict__
+
+    def from_dict(d):
+        return UserData(type=d["type"], id=d["id"], name=d["name"], email=d["email"], course_names=d["course_names"])
 
 
 '''
