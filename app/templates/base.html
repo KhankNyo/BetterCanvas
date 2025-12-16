@@ -35,37 +35,50 @@
 	</li>
 {% endmacro %}
 
+
+{% macro render_course_list() %}
+	{# RANT:(khanh): Languages that allow dynamic obj members should be fucking outlawed 
+		In a PROPER compiled language, accessing an undefined obj member would be a compile error at compile time, 
+		BUT IT RUNS FINE HERE 
+		{% for course_name in userdata.courses %}
+	#}
+	{% for course_name in userdata.course_names %}
+		{# TODO:(khanh): link to a course page, 
+			course page displays: 
+				assignments from the course
+				people from the course
+				announcements from the course
+		#}
+		<a class={{dropdown_item(is_course_create_active)}} href="/courses">
+			{{course_name}}
+		</a>
+	{% endfor %}
+
+	{% if userdata.type == UserType.TEACHER %}
+		<a class={{dropdown_item(is_course_create_active)}} href="/courses/create">
+			Create New
+		</a>
+	{% endif %}
+{% endmacro %}
+
+
 {% macro courses_navbar_item() %}
 	{# RANT:(khanh): My FUCKING GOD, Bootstrap does come with a dropdown menu, but WITHOUT hover. 
 		It would actually be SIMPLER to make hoverable dropdown menu in pure CSS and HTML. 
 		God I fucking hate web programming
 	#}
+	{# TODO:(khanh): remove this #}
 	<li class="nav-item {{set_active_if(is_courses_active)}}">
 		<a class="nav-link" href="/courses"> 
 			Courses 
 		</a>
 	</li>
-	{# TODO:(khanh): dropdown menu for course creation, list
-		ok shit this requires a fuck ton of rewrite, can't be bothered to do this at 3:30am rn
-	#}
-
 	<li class="nav-item dropdown {{set_active_if(is_course_list_active or is_course_create_active)}}">
 		<button class="nav-link dropbtn">
 			My Courses
 		</button>
 		<div class="navbar-bg-color dropdown-content">
-			{% if username %}
-				<a class={{dropdown_item(is_course_list_active)}} href="/courses/list">
-					My Courses
-				</a>
-				<a class={{dropdown_item(is_course_create_active)}} href="/courses/create">
-					Create New
-				</a>
-			{% else %}
-				<a class={{dropdown_item(is_course_list_active)}}>
-					Must sign in to view courses
-				</a>
-			{% endif %}
+			{{render_course_list()}}
 		</div>
 	</li>
 {% endmacro %}

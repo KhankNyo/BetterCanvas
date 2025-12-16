@@ -31,6 +31,9 @@ class UserData:
     def as_dict(self):
         return self.__dict__
 
+    def from_dict(d):
+        return UserData(d["type"], d["name"], d["email"], d["course_names"])
+
 
 '''
 # NOTE:(khanh): maybe instead of having 2 separate classes, 
