@@ -4,7 +4,7 @@ g_DB = SQLAlchemy()
 from flask import Flask, render_template
 from .config import create_app_config
 from .session import session_get_current_user_dict
-import os
+import os, sys
 
 
 def create_app():
@@ -19,8 +19,17 @@ def create_app():
         os.makedirs(myapp_obj.config['RESOURCES'])
 
     with myapp_obj.app_context():
-        from .auth import routes
-        from .main import routes
+        #apparently this is needed to refresh route imports for testing purposes
+        for module in ['app.auth.routes', 'app.main.routes']:
+            if module in sys.modules:
+                del sys.modules[module]
+
+        from .auth.routes import init_auth_routes
+        from .main.routes import init_main_routes
+
+        init_auth_routes(myapp_obj)
+        init_main_routes(myapp_obj)
+
         g_DB.create_all()
     return myapp_obj
 

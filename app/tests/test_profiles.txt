@@ -2,4 +2,6 @@ NOTE: these profiles are used for testing login, logout and ui
 tester - password123 - perm: teacher
 student1 - password123 - perm: student
 
+NOTE NOTE: database got nuked but just use password123 as the default password for testing for now
+
 

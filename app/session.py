@@ -10,7 +10,7 @@ def session_update_current_user(userdata: UserData):
 
 def session_add_current_user_locally(name, isStudent, email):
     session['username'] = name
-    session['student'] = is_student
+    session['student'] = isStudent
     session['email'] = email
 
     user_type = UserType.TEACHER
