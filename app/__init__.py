@@ -4,9 +4,9 @@ g_DB = SQLAlchemy()
 from flask import Flask, render_template
 from .config import create_app_config
 from .session import session_get_current_user_dict
-import os, sys
 from .models import UserType
-import os
+import os, sys
+
 
 def create_app():
     myapp_obj = Flask(__name__)

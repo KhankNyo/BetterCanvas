@@ -47,6 +47,36 @@ def init_main_routes(myapp_obj):
         flash('You are not logged in!')
         return redirect('/auth/login')
 
+    @myapp_obj.route('/courses/create', methods = ['GET', 'POST'])
+    def promptCourseCreation():
+        if not session_is_current_user_logged_in():
+            return forceUserToLogIn()
+
+        user = session_get_current_user_obj()
+        assert(user.type == UserType.TEACHER and "BAD BAD BAD, only teacher can have access to course creation form")
+
+        courseCreationForm = CourseForm()
+        if request.method == 'POST':
+            if courseCreationForm.validate_on_submit():
+                # NOTE:(khanh): user filled out course creation form, add it to db
+                newCourse = Course(
+                    name=user.name, 
+                    description=courseCreationForm.description.data, 
+                    units=courseCreationForm.units.data, 
+                    max_capacity=courseCreationForm.capacity.data, 
+                    teacher_id=user.id
+                )
+                # TODO:(khanh): update course list in userobj
+                db_add_now(newCourse)
+                return redirect('/courses')
+            else:
+                # NOTE:(khanh): incorrect fields, log this? 
+                dummyNopFn()
+        else:
+            # NOTE:(khanh): GET or other methods, log this?
+            dummyNopFn()
+        return app_render_template('main/courses_create.html', form=courseCreationForm)
+
     @myapp_obj.route('/announcements_redirect')
     def announcementsRedirect():
         if "username" in session:

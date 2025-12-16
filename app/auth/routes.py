@@ -7,13 +7,13 @@ from ..session import *
 from werkzeug.security import check_password_hash
 import flask_login
 
-def init_auth_routes(myapp_obj):
 
+def init_auth_routes(myapp_obj):
     from app import db_add_now, app_render_template
 
     @myapp_obj.route('/auth/login', methods = ['GET', 'POST'])
     def login():
-        if session_current_user_is_logged_in():
+        if session_is_current_user_logged_in():
             flash('You are already logged in.')
             return redirect('/')
 
@@ -58,12 +58,12 @@ def init_auth_routes(myapp_obj):
                         new_teacher = Teacher(username=username, email=email)
                         new_teacher.set_password(password)
                         db_add_now(new_teacher)
-                        session_add_current_user_locally(name=username, isStudent=False, email=email)
+                        session_add_current_user_locally(name=username, is_student=False, email=email)
                     else:
                         new_student = Student(username=username, email=email)
                         new_student.set_password(password)
                         db_add_now(new_student)
-                        session_add_current_user_locally(name=username, isStudent=True, email=email)
+                        session_add_current_user_locally(name=username, is_student=True, email=email)
                     flash('Successfully registered! You are logged in!')
                     return redirect('/announcements')
 
@@ -71,7 +71,7 @@ def init_auth_routes(myapp_obj):
 
     @myapp_obj.route('/auth/signout', methods = ['GET'])
     def signout():
-        if not session_current_user_is_logged_in():
+        if not session_is_current_user_logged_in():
             flash('You are not logged in.')
         else:
             session_remove_current_user()
