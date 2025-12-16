@@ -51,6 +51,12 @@ class User(db.Model):
         self.password = generate_password_hash(password)
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+# NOTE: (Bryan): if we implement this, then we'd have to redefine the schema (blueprints) of the database since
+# the Student model is a referenced model. Both Submission and Enrollments have an attribute that depends on
+# the Student model as a foreign key. We can't calculate assignment grades and course grades at will
+# without this dependency. Backrefs in the Student model are to sql-JOIN the relevant tables based on the foreign key.
 '''
 
 

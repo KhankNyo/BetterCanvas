@@ -66,7 +66,13 @@ def session_find_user_by_name(name) -> tuple[UserData|bool, Student|Teacher|None
     courses = []
     if user:
         # student
-        course_iter = Enrollment.query.filter_by(student_id=user.id)
+        #this causes error as Enrollment model has no name attribute
+        #course_iter = Enrollment.query.filter_by(student_id=user.id)
+        enrollment_iter = {}
+        enrollment_iter = Enrollment.query.filter_by(student_id=user.id)
+        for enrollment in enrollment_iter:
+            course = Course.query.filter_by(id=enrollment.course_id).first()
+            courses.append(course.name)
     else:
         # teacher
         user_type = UserType.TEACHER
@@ -74,7 +80,7 @@ def session_find_user_by_name(name) -> tuple[UserData|bool, Student|Teacher|None
         if not user:
             return False, user
         course_iter = Course.query.filter_by(teacher_id=user.id)
-    courses = [x.name for x in course_iter]
+        courses = [x.name for x in course_iter]
     result = UserData(usertype=user_type, name=user.username, email=user.email, course_names=courses)
     return result, user
 
