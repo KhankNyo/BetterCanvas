@@ -11,7 +11,7 @@ def session_update_current_user(userdata: UserData):
 
 def session_add_current_user_locally(name, is_student, email):
     session['username'] = name
-    session['student'] = isStudent
+    session['student'] = is_student
     session['email'] = email
     course_names, user_type, id = __query_user_data(name, is_student)
     session['userobj'] = UserData(
@@ -99,14 +99,14 @@ def __query_user_data(
 
 def __query_student_data(
     name: str
-) -> tuple[ 
+) -> tuple[
     "associated_course_names: str",
     "user_type: UserType",
     "user_id: int", 
     "user_from_query: Student"
 ]:
     student = Student.query.filter_by(username=name).first()
-    associated_course_names = __get_course_names_from_student(name)
+    associated_course_names = __get_course_names_from_student(student)
     return associated_course_names, UserType.STUDENT, student.id, student
 
 def __query_teacher_data(
@@ -124,10 +124,11 @@ def __query_teacher_data(
 
 def __get_course_names_from_student(student: Student) -> List[str]:
     course_names = []
-    for enrollment in student.enrollments:
-        # NOTE:(khanh): db query in loop? May be a perf concern, not a priority rn
-        course = Course.query.filter_by(id=enrollment.course_id).first()
-        course_names.append(course.name)
+    if student.enrollments:
+        for enrollment in student.enrollments:
+            # NOTE:(khanh): db query in loop? May be a perf concern, not a priority rn
+            course = Course.query.filter_by(id=enrollment.course_id).first()
+            course_names.append(course.name)
     return course_names
 
 def __get_course_names_from_teacher(teacher: Teacher) -> List[str]:
