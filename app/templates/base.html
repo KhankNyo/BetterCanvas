@@ -1,7 +1,17 @@
 
-{# NOTE:(khanh): all call to render template must pass in 'username' 
-	since base.html (this file) uses it to display the courses
+{# NOTE:(khanh): all call to render template must pass in 'user', a dict of UserData.
+	since base.html (this file) uses it to display the login status, courses, etc
 #}
+
+{% macro login_status() %}
+	{% if user.type == UserType.STUDENT %} 
+		Logged in as student: {{user.name}}
+	{% elif user.type == UserType.TEACHER %}
+		Logged in as teacher: {{user.name}}
+	{% else %}
+		Not logged in
+	{% endif %} 
+{% endmacro %}
 
 {% macro redirectable_link(is_what_active, normal, redirect) %}
 	{% if is_what_active %}
@@ -40,22 +50,16 @@
 	{# RANT:(khanh): Languages that allow dynamic obj members should be fucking outlawed 
 		In a PROPER compiled language, accessing an undefined obj member would be a compile error at compile time, 
 		BUT IT RUNS FINE HERE 
-		{% for course_name in userdata.courses %}
+		{% for course_name in user.courses %}
 	#}
-	{% for course_name in userdata.course_names %}
-		{# TODO:(khanh): link to a course page, 
-			course page displays: 
-				assignments from the course
-				people from the course
-				announcements from the course
-		#}
-		<a class={{dropdown_item(is_course_create_active)}} href="/courses">
+	{% for course_name in user.course_names %}
+		<a class={{dropdown_item(is_courses_list_active)}} href="/courses/list">
 			{{course_name}}
 		</a>
 	{% endfor %}
 
-	{% if userdata.type == UserType.TEACHER %}
-		<a class={{dropdown_item(is_course_create_active)}} href="/courses/create">
+	{% if user.type == UserType.TEACHER %}
+		<a class={{dropdown_item(is_courses_create_active)}} href="/courses/create">
 			Create New
 		</a>
 	{% endif %}
@@ -67,13 +71,15 @@
 		It would actually be SIMPLER to make hoverable dropdown menu in pure CSS and HTML. 
 		God I fucking hate web programming
 	#}
-	{# TODO:(khanh): remove this #}
+	{# TODO:(khanh): remove this 
 	<li class="nav-item {{set_active_if(is_courses_active)}}">
 		<a class="nav-link" href="/courses"> 
 			Courses 
 		</a>
 	</li>
-	<li class="nav-item dropdown {{set_active_if(is_course_list_active or is_course_create_active)}}">
+	#}
+
+	<li class="nav-item dropdown {{set_active_if(is_course_list_active or is_courses_create_active)}}">
 		<button class="nav-link dropbtn">
 			My Courses
 		</button>
@@ -114,16 +120,16 @@
 		logout will only display when the user has already logged in, 
 		login will only display when the user has not logged in yet
 	#}
-	{% if username %}
-		<li class="nav-item {{set_active_if(is_logout_active)}}">
-			<a class="nav-link" href="/logout"> 
-				Logout 
-			</a>
-		</li>
-	{% else %}
+	{% if user.type == UserType.NOT_LOGGED_IN %}
 		<li class="nav-item {{set_active_if(is_login_active)}}">
 			<a class="nav-link" href="/login_redirect"> 
 				Login 
+			</a>
+		</li>
+	{% else %}
+		<li class="nav-item {{set_active_if(is_logout_active)}}">
+			<a class="nav-link" href="/logout"> 
+				Logout 
 			</a>
 		</li>
 	{% endif %}
@@ -195,13 +201,7 @@
 
 
 		<header> 
-			{% if username %} 
-				Logged in as 
-				{% if isStudent %} student: {% else %} teacher: {% endif %} 
-				{{username}} 
-			{% else %}
-				Not logged in
-			{% endif %} 
+			{{login_status()}}
 		</header>
 
 

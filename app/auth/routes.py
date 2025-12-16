@@ -9,7 +9,7 @@ import flask_login
 
 @myapp_obj.route('/auth/login', methods = ['GET', 'POST'])
 def login():
-    if session_current_user_is_logged_in():
+    if session_is_current_user_logged_in():
         flash('You are already logged in.')
         return redirect('/')
 
@@ -67,7 +67,7 @@ def register():
 
 @myapp_obj.route('/auth/signout', methods = ['GET'])
 def signout():
-    if not session_current_user_is_logged_in():
+    if not session_is_current_user_logged_in():
         flash('You are not logged in.')
     else:
         session_remove_current_user()

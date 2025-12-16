@@ -2,6 +2,7 @@ from flask import request, flash, redirect, session, url_for, send_from_director
 from flask import current_app as myapp_obj
 from ..forms import AnnouncementForm, CourseForm, ResourceForm, CourseSignUp, AssignmentCreate, Button, SubmissionForm, GradeForm
 from ..models import Announcement, Student, Teacher, Course, Enrollment, Resource, Assignment, Submission
+from ..session import *
 from app import db_add_now, db_delete_now, db_commit, app_render_template
 from werkzeug.utils import secure_filename
 import time, sqlite3, os
@@ -72,6 +73,35 @@ def people():
 @myapp_obj.route('/courses', methods = ['GET', 'POST'])
 def showCoursesPage():
     return showCoursesImpl(isAtHomePage=False)
+
+@myapp_obj.route('/courses/create', methods = ['GET', 'POST'])
+def promptCourseCreation():
+    if not session_is_current_user_logged_in():
+        return forceUserToLogIn()
+
+    user = session_get_current_user_obj()
+    assert(user.type == UserType.TEACHER and "BAD BAD BAD, only teacher can have access to course creation form")
+
+    courseCreationForm = CourseForm()
+    if request.method == 'POST':
+        if courseCreationForm.validate_on_submit():
+            # NOTE:(khanh): user filled out course creation form, add it to db
+            newCourse = Course(
+                name=user.name, 
+                description=courseCreationForm.description.data, 
+                units=courseCreationForm.units.data, 
+                max_capacity=courseCreationForm.capacity.data, 
+                teacher_id=user.id
+            )
+            db_add_now(newCourse)
+            return redirect('/courses')
+        else:
+            # NOTE:(khanh): incorrect fields, log this? 
+            dummyNopFn()
+    else:
+        # NOTE:(khanh): GET or other methods, log this?
+        dummyNopFn()
+    return app_render_template('main/courses_create.html', form=courseCreationForm)
 
 #@myapp_obj.route('/courses', methods = ['GET', 'POST'])
 def showCoursesImpl(isAtHomePage):
@@ -320,3 +350,10 @@ def calculateStudentGrade(student, course):
     #now update the student's course grade with it (exists in Enrollment table)
     enrollment = Enrollment.query.filter_by(course_id=course.id, student_id=student.id).first()
     enrollment.course_grade = formatGrade #all done!
+
+def forceUserToLogIn():
+    flash('You are not logged in!')
+    return redirect('/auth/login')
+
+def dummyNopFn():
+    return
