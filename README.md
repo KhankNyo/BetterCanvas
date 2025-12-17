@@ -1,16 +1,13 @@
 # M2 - Set Up
-To retrieve Milestone 2 Project:
->	git clone https://github.com/KhankNyo/BetterCanvas
-
-cd into the folder this was cloned into
-
-> git checkout m2
-
-cd into the BetterCanvas directory. A run.py should exist in this directory. Also a requirements.txt file that includes dependencies.
-
-Make sure you have the dependencies installed (review requirements.txt) and a virtual environment running.
-
-Run the file run.py using python3 run.py in your terminal. Put in the link "http://127.0.0.1:5000/" in your browser. 
+- To retrieve Milestone 2 Project:
+```
+git clone https://github.com/KhankNyo/BetterCanvas <dir>
+cd <dir>
+git checkout m2
+```
+- Dependencies can be installed via `requirements.txt`
+- Then run `run.py` to start the app
+ 
 ### IMPORTANT: Make sure you are logged out on our website and delete cookies beforehand! (especially if you have been on it before and was logged in)! Changes to the database were made.
 Then, to access different parts of the website, please log in or register an account. Teacher and student accounts see different things on the website. 
 
