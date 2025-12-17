@@ -62,6 +62,10 @@
 		<a class={{dropdown_item(is_courses_create_active)}} href="/courses/create">
 			Create New
 		</a>
+	{% elif user.type == UserType.STUDENT %}
+		<a class={{dropdown_item(is_courses_create_active)}} href="/courses/add">
+			Add class
+		</a>
 	{% endif %}
 {% endmacro %}
 
