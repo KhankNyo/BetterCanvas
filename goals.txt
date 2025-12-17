@@ -1,0 +1,56 @@
+                                                              |--Functional Requirements--|
+--Core System Requirements--
+1. User/Instructor Login: The system shall allow a user (Student or Instructor) to log in using a valid, registered username and password.
+    Post State: Given a valid username and password, the user shall be directed to their respective dashboard (Student Dashboard or Instructor Dashboard).
+    Alternate Sequence: Given invalid credentials, the system shall display an error message and remain on the login page.
+
+2. View Class Roster: The system shall display a class roster to both Students and Instructors, showing the names and roles of all enrolled members.
+    Acceptance Criteria: The system shall comply with FERPA (Family Educational Rights and Privacy Act) regulations regarding student data privacy. 
+
+--Instructor-Specific Requirements--
+3. Create Assignments: The Instructor shall be able to create a new assignment with a title, description, due date/time, total points possible, and assignment type.
+    Acceptance Criteria: The system must validate that all mandatory fields are provided before the assignment is saved and published.
+
+4. Add Students to Class: The Instructor shall be able to add students to their specific class roster by entering a valid student ID.
+    Post State: Upon successful addition, the system shall send a confirmation notification to the added student.
+
+5. Drop Students from a Class: The Instructor shall be able to drop a student from their class roster.
+    Post State: Upon dropping a student, the system must revoke all student access to that specific class, but keep information in the class database.
+
+6. Make Announcements: The Instructor shall be able to compose and publish an announcement to the entire class.
+    Post State: Published announcements shall appear prominently on the Student Dashboard.
+
+7. Modify Grades: The Instructor shall be able to view and modify grades for student assignment submissions.
+    Post State: The system will update the grade for an assignment for a particular student and a log of the change will be recorded.
+
+--Student-Specific Requirements--
+8. Submit Files to Assignments: The Student shall be able to upload and submit a file (limited to specified formats like .pdf, .docx, .txt, with a maximum size of 10MB) to an active assignment.
+    Post State: The system must provide a submission confirmation message with a timestamp. Submissions after the due date must be marked as 'Late'. Submissions are saved to Assignment.
+    Fail State: File submissions are limited to specific formats (like .pdf, .docx, .txt, etc) and to a maximum size (10 MB). 
+        Alternate Sequence: An error will flash to the Student's page explaining that the file is incompatible.
+
+9. Upload Files to Resources: The Student shall be able to upload files to a shared "Resources" section within the class.
+    Post State: File submissions will be recorded and added to a course's Resources tab.
+    Fail State: File submissions are limited to specific formats and maximum size.
+        Alternate Sequence: An error will flash to the Student's page explaining that the file is incompatible.
+
+10. View Grades: The Student shall be able to view their individual grades for all graded assignments and their overall course grade.
+    Acceptance Criteria: The grade information shall be read-only for the student and must reflect the current calculated total.
+
+11. Message Other Students: The Student shall be able to send private messages to other individual students enrolled in the same class.
+    Acceptance Criteria: Messages must be stored in an in-system inbox. The system shall send a notification to the recipient about a new message. 
+
+12. Message Instructors: The Student shall be able to send private messages to the instructor(s) of the class.
+    Acceptance Criteria: Messages must be stored in an in-system inbox. The system shall send a notification to the recipient about a new message. 
+
+                                                            |--Non-Functional Requirements--|
+--Performance--
+1. The system must process a user's request within 2 seconds.
+
+2. Web pages should load in less than 3 seconds.
+
+--Security--
+3. Sensitive data (passwords) must be encrypted.
+
+--Uptime--
+4. The website should be accessible 98% of active runtime
