@@ -60,14 +60,15 @@ def init_main_routes(myapp_obj):
             if courseCreationForm.validate_on_submit():
                 # NOTE:(khanh): user filled out course creation form, add it to db
                 newCourse = Course(
-                    name=user.name, 
+                    name=courseCreationForm.name.data, 
                     description=courseCreationForm.description.data, 
                     units=courseCreationForm.units.data, 
                     max_capacity=courseCreationForm.capacity.data, 
                     teacher_id=user.id
                 )
-                # TODO:(khanh): update course list in userobj
                 db_add_now(newCourse)
+                user.course_names.append(newCourse.name)
+                session_update_current_user(user)
                 return redirect('/courses')
             else:
                 # NOTE:(khanh): incorrect fields, log this? 
@@ -76,6 +77,57 @@ def init_main_routes(myapp_obj):
             # NOTE:(khanh): GET or other methods, log this?
             dummyNopFn()
         return app_render_template('main/courses_create.html', form=courseCreationForm)
+
+    @myapp_obj.route('/courses/join', methods = ['GET', 'POST'])
+    def promptCourseJoin():
+        if not session_is_current_user_logged_in():
+            return forceUserToLogIn()
+
+        user = session_get_current_user_obj()
+        assert(user.type == UserType.STUDENT and "only students can join courses")
+
+        # NOTE:(khanh): Bryan's code
+        enrollForm = CourseSignUp()
+        #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
+        student = Student.query.filter_by(username=session.get("username")).first()
+        studentEnrollments = student.enrollments
+        #logic: when the 'Enroll' button is pressed, we want to get the student's id and course's id to add to Enrollments
+        if request.method == 'POST':
+            #the data for the course id is in the request form
+            course_id = request.form.get('course_id')
+            if course_id:
+                # NOTE:(khanh): kinda sketchy, 'drop' button will submit a course to drop, 'enroll' button submits a None object
+                already_enrolled = Enrollment.query.filter_by(student_id=student.id, course_id=course_id).first()
+                if already_enrolled:
+                    course = Course.query.filter_by(id=course_id).first()
+                    #update course enrollment count and student's units
+                    course.students_enrolled -= 1
+                    student.units_enrolled -= course.units
+                    #delete/drop already_enrolled tuple from relation Enrollment
+                    db_delete_now(already_enrolled)
+                    user.course_names.remove(course.name)
+                    flash("Dropped the class!")
+                else:
+                    course = Course.query.filter_by(id=course_id).first()
+                    #check if it doesnt violate max unit allowance OR if there is no space in the class
+                    if student.units_enrolled > 20:
+                        flash('This course would put you over the unit limit (20). Drop another class to fit this one.')
+                    elif course.students_enrolled > course.max_capacity:
+                        flash('This course is at max capacity. Sorry!.')
+                    else:
+                        #update students units and course's enrollment count
+                        course.students_enrolled += 1
+                        student.units_enrolled += course.units
+                        newEnroll = Enrollment(student_id=student.id, course_id=course.id)
+                        db_add_now(newEnroll)
+                        user.course_names.append(course.name)
+                        flash('Succesfully enrolled!')
+                return redirect('/courses')
+
+        courses = Course.query.all()
+        #first page students will see
+        return app_render_template('/main/courses_join.html', courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
+
 
     @myapp_obj.route('/announcements_redirect')
     def announcementsRedirect():

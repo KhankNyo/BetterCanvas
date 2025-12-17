@@ -63,12 +63,15 @@
 			Create New
 		</a>
 	{% elif user.type == UserType.STUDENT %}
-		<a class={{dropdown_item(is_courses_create_active)}} href="/courses/add">
-			Add class
+		<a class={{dropdown_item(is_courses_create_active)}} href="/courses/join">
+			Join a course
 		</a>
 	{% endif %}
 {% endmacro %}
 
+{% macro should_courses_navbar_item_be_active() %}
+	{{set_active_if(is_courses_list_active or is_courses_create_active or is_courses_join_active)}}
+{% endmacro %}
 
 {% macro courses_navbar_item() %}
 	{# RANT:(khanh): My FUCKING GOD, Bootstrap does come with a dropdown menu, but WITHOUT hover. 
@@ -76,14 +79,14 @@
 		God I fucking hate web programming
 	#}
 	{# TODO:(khanh): remove this 
-	#}
 	<li class="nav-item {{set_active_if(is_courses_active)}}">
 		<a class="nav-link" href="/courses"> 
 			Courses 
 		</a>
 	</li>
+	#}
 
-	<li class="nav-item dropdown {{set_active_if(is_course_list_active or is_courses_create_active)}}">
+	<li class="nav-item dropdown {{should_courses_navbar_item_be_active()}}">
 		<button class="nav-link dropbtn">
 			My Courses
 		</button>

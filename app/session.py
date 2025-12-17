@@ -42,7 +42,7 @@ def session_get_current_user_obj() -> UserData:
     ALWAYS return a valid UserData class converted to dict
 '''
 def session_get_current_user_dict() -> dict:
-    if 'username' not in session:
+    if 'userobj' not in session:
         # returns a default user (not logged in)
         return UserData().as_dict()
 
