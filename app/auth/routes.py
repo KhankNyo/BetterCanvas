@@ -15,7 +15,7 @@ def init_auth_routes(myapp_obj):
     def login():
         if session_is_current_user_logged_in():
             flash('You are already logged in.')
-            return redirect('/')
+            return redirect('/announcements')
 
         form = LoginForm()
         if request.method == 'POST' and form.validate_on_submit():

@@ -64,11 +64,11 @@ def session_find_user(find_by, value: str|int) -> tuple[UserData|bool, Student|T
     course_names, course_ids, user_type, user_id, user_from_query = __query_user_data(find_by, value, bool(user), user)
     result = UserData(
         type=user_type, 
-        name=name, 
+        name=user_from_query.username if user_from_query else "", 
         id=user_from_query.id if user_from_query else 0,
         email=user_from_query.email if user_from_query else "",
-        course_names=associated_course_names,
-        course_ids=associated_course_ids
+        course_names=course_names,
+        course_ids=course_ids
     )
     return result, user_from_query
 
@@ -153,7 +153,7 @@ def __get_course_data_from_student(
         course = Course.query.filter_by(id=enrollment.course_id).first()
         course_names.append(course.name)
         course_ids.append(course.id)
-    return course_names, course_id
+    return course_names, course_ids
 
 def __get_course_data_from_teacher(
     teacher: Teacher
@@ -172,6 +172,6 @@ def find_by_id(typename: Student|Teacher, id: int) -> Student|Teacher:
     return result
 
 def find_by_name(typename: Student|Teacher, name: str) -> Student|Teacher:
-    result = typename.query.filter_by(name=name).first()
+    result = typename.query.filter_by(username=name).first()
     return result
 
