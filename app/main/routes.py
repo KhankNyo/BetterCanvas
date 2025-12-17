@@ -13,7 +13,7 @@ def init_main_routes(myapp_obj):
     #home page that shows links in our site
     @myapp_obj.route('/', methods = ['GET', 'POST'])
     def index():
-        return redirect('/auth/login')
+        return redirect('/announcements')
 
     #LOGIC: in index.html, the links go to redirects so I can flash a message
     @myapp_obj.route('/redirect')
