@@ -262,7 +262,7 @@ def test_teacherCreatesAssignment_studentSubmitsAssignment(client):
             allAsses = Assignment.query.all()
             for ass in allAsses:
                 print(ass.description)
-                print(add.points)
+                print(ass.points)
             pytest.fail("Didn't add Assignment to the database")
 
     # now lets switch to the student and see if they can see the just posted assignment
