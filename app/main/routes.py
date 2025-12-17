@@ -67,8 +67,7 @@ def init_main_routes(myapp_obj):
                     teacher_id=user.id
                 )
                 db_add_now(newCourse)
-                user.course_names.append(newCourse.name)
-                session_update_current_user(user)
+                add_course_to_current_user(user, newCourse.name)
                 return redirect('/courses')
             else:
                 # NOTE:(khanh): incorrect fields, log this? 
@@ -106,7 +105,8 @@ def init_main_routes(myapp_obj):
                     student.units_enrolled -= course.units
                     #delete/drop already_enrolled tuple from relation Enrollment
                     db_delete_now(already_enrolled)
-                    user.course_names.remove(course.name)
+
+                    remove_course_from_current_user(user, course.name)
                     flash("Dropped the class!")
                 else:
                     course = Course.query.filter_by(id=course_id).first()
@@ -121,7 +121,8 @@ def init_main_routes(myapp_obj):
                         student.units_enrolled += course.units
                         newEnroll = Enrollment(student_id=student.id, course_id=course.id)
                         db_add_now(newEnroll)
-                        user.course_names.append(course.name)
+
+                        add_course_to_current_user(user, course.name)
                         flash('Succesfully enrolled!')
                 return redirect('/courses')
 
@@ -168,6 +169,8 @@ def init_main_routes(myapp_obj):
             courses = Course.query.all()
             isStudent = session.get('student')
             username = session.get('username')
+            user = session_get_current_user_obj()
+
             #if a teacher, make form for teachers to create a course and send it app_render_template
             if not isStudent: #form to get for teachers
                 courseForm = CourseForm()
@@ -191,6 +194,8 @@ def init_main_routes(myapp_obj):
                         teacher = Teacher.query.filter_by(username=session.get("username")).first()
                         newCourse = Course(name=name, description=desc, units=unit, max_capacity=capacity, teacher_id=teacher.id)
                         db_add_now(newCourse)
+
+                        add_course_to_current_user(user, newCourse.name)
                         return redirect('/courses')
                     elif dropForm.validate_on_submit():
                         #retrieve hidden data from request
@@ -202,6 +207,8 @@ def init_main_routes(myapp_obj):
                         course.students_enrolled -= 1
                         student.units_enrolled -= course.units
                         db_delete_now(enrollment);
+
+                        remove_course_from_current_user(user, course.name)
                         return redirect('/courses')
 
                 #this is first page teacher will see
@@ -225,6 +232,8 @@ def init_main_routes(myapp_obj):
                             student.units_enrolled -= course.units
                             #delete/drop already_enrolled tuple from relation Enrollment
                             db_delete_now(already_enrolled)
+
+                            remove_course_from_current_user(user, course.name)
                             flash("Dropped the class!")
                         else:
                             course = Course.query.filter_by(id=course_id).first()
@@ -239,6 +248,8 @@ def init_main_routes(myapp_obj):
                                 student.units_enrolled += course.units
                                 newEnroll = Enrollment(student_id=student.id, course_id=course.id)
                                 db_add_now(newEnroll)
+
+                                add_course_to_current_user(user, course.name)
                                 flash('Succesfully enrolled!')
                         return redirect('/courses')
                 #first page students will see
@@ -414,3 +425,12 @@ def init_main_routes(myapp_obj):
 
     def dummyNopFn():
         return
+
+    def add_course_to_current_user(user, course_name):
+        user.course_names.append(course_name)
+        session_update_current_user(user)
+
+    def remove_course_from_current_user(user, course_name):
+        user.course_names.remove(course_name)
+        session_update_current_user(user)
+
