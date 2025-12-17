@@ -4,7 +4,9 @@ To retrieve Milestone 2 Project:
 
 > git checkout 840b2cc24145bb05c9e054f5fa5f0d6ecb916af1
 
-cd into the BetterCanvas directory. A run.py should exist in this directory.
+cd into the BetterCanvas directory. A run.py should exist in this directory. Also a requirements.txt file that includes dependencies.
+
+Make sure you have dependencies installed and a virtual environment running.
 
 Run the file run.py using python3 run.py in your terminal. Put in the link "http://127.0.0.1:5000/" in your browser. 
 ### IMPORTANT: Make sure you are logged out on our website and delete cookies beforehand! (especially if you have been on it before and was logged in)! Changes to the database were made.
