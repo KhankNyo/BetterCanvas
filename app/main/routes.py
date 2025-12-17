@@ -87,6 +87,7 @@ def init_main_routes(myapp_obj):
         assert(user.type == UserType.STUDENT and "only students can join courses")
 
         # NOTE:(khanh): Bryan's code
+        courses = Course.query.all()
         enrollForm = CourseSignUp()
         #we can retrieve the student's enrollment because Student has property .enrollments that joins Student and Enrollments off the ID
         student = Student.query.filter_by(username=session.get("username")).first()
@@ -124,7 +125,6 @@ def init_main_routes(myapp_obj):
                         flash('Succesfully enrolled!')
                 return redirect('/courses')
 
-        courses = Course.query.all()
         #first page students will see
         return app_render_template('/main/courses_join.html', courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
 

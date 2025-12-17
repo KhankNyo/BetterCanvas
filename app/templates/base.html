@@ -47,13 +47,8 @@
 
 
 {% macro render_course_list() %}
-	{# RANT:(khanh): Languages that allow dynamic obj members should be fucking outlawed 
-		In a PROPER compiled language, accessing an undefined obj member would be a compile error at compile time, 
-		BUT IT RUNS FINE HERE 
-		{% for course_name in user.courses %}
-	#}
 	{% for course_name in user.course_names %}
-		<a class={{dropdown_item(is_courses_list_active)}} href="/courses/list">
+		<a class={{dropdown_item(is_courses_list_active)}} href="#">
 			{{course_name}}
 		</a>
 	{% endfor %}
@@ -74,17 +69,11 @@
 {% endmacro %}
 
 {% macro courses_navbar_item() %}
-	{# RANT:(khanh): My FUCKING GOD, Bootstrap does come with a dropdown menu, but WITHOUT hover. 
-		It would actually be SIMPLER to make hoverable dropdown menu in pure CSS and HTML. 
-		God I fucking hate web programming
-	#}
-	{# TODO:(khanh): remove this 
 	<li class="nav-item {{set_active_if(is_courses_active)}}">
 		<a class="nav-link" href="/courses"> 
 			Courses 
 		</a>
 	</li>
-	#}
 
 	<li class="nav-item dropdown {{should_courses_navbar_item_be_active()}}">
 		<button class="nav-link dropbtn">
