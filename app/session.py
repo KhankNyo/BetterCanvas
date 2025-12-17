@@ -13,7 +13,7 @@ def session_add_current_user_locally(name, is_student, email):
     session['username'] = name
     session['student'] = is_student
     session['email'] = email
-    course_names, user_type, id = __query_user_data(name, is_student)
+    course_names, user_type, id, user_from_query = __query_user_data(name, is_student)
     session['userobj'] = UserData(
         type=user_type, 
         name=name, 
@@ -61,8 +61,8 @@ def session_find_user_by_name(name) -> tuple[UserData|bool, Student|Teacher|None
     result = UserData(
         type=user_type, 
         name=name, 
-        id=user_from_query.id,
-        email=user_from_query.email,
+        id=user_from_query.id if user_from_query else 0,
+        email=user_from_query.email if user_from_query else "",
         course_names=associated_course_names
     )
     return result, user_from_query
@@ -106,6 +106,9 @@ def __query_student_data(
     "user_from_query: Student"
 ]:
     student = Student.query.filter_by(username=name).first()
+    if not student:
+        return [], UserType.NOT_LOGGED_IN, 0, None
+
     associated_course_names = __get_course_names_from_student(student)
     return associated_course_names, UserType.STUDENT, student.id, student
 
@@ -118,6 +121,9 @@ def __query_teacher_data(
     "user_from_query: Teacher"
 ]:
     teacher = Teacher.query.filter_by(username=name).first()
+    if not teacher:
+        return [], UserType.NOT_LOGGED_IN, 0, None
+
     associated_course_names = __get_course_names_from_teacher(teacher)
     return associated_course_names, UserType.TEACHER, teacher.id, teacher
 

@@ -1,1 +1,47 @@
-this is another test
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800  1) from flask_sqlalchemy import SQLAlchemy
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800  2) g_DB = SQLAlchemy()
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800  3) 
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800  4) from flask import Flask, render_template
+f50d8bbf (Khanh                 2025-11-14 22:32:31 -0800  5) from .config import create_app_config
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800  6) from .session import session_get_current_user_dict
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800  7) import os
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800  8) 
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800  9) 
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800 10) def create_app():
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800 11)     myapp_obj = Flask(__name__)
+f50d8bbf (Khanh                 2025-11-14 22:32:31 -0800 12)     create_app_config(myapp_obj);
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800 13) 
+f50d8bbf (Khanh                 2025-11-14 22:32:31 -0800 14)     g_DB.init_app(myapp_obj)
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800 15) 
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800 16)     if not os.path.exists(myapp_obj.config['UPLOADS']):
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800 17)         os.makedirs(myapp_obj.config['UPLOADS'])
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800 18)     if not os.path.exists(myapp_obj.config['RESOURCES']):
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800 19)         os.makedirs(myapp_obj.config['RESOURCES'])
+3c88239e (Bryan D. Morales Sosa 2025-12-08 19:17:20 -0800 20) 
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800 21)     with myapp_obj.app_context():
+e4bc8985 (Khanh                 2025-11-14 23:31:06 -0800 22)         from .auth import routes
+e4bc8985 (Khanh                 2025-11-14 23:31:06 -0800 23)         from .main import routes
+f50d8bbf (Khanh                 2025-11-14 22:32:31 -0800 24)         g_DB.create_all()
+bf116ac0 (Khanh                 2025-11-14 10:37:05 -0800 25)     return myapp_obj
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 26) 
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 27) '''Add something to the db and commit'''
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 28) def db_add_now(thing):
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 29)     g_DB.session.add(thing);
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 30)     g_DB.session.commit();
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 31) 
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 32) '''Delete something to the db and commit'''
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 33) def db_delete_now(thing):
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 34)     g_DB.session.delete(thing);
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 35)     g_DB.session.commit();
+59a47a05 (Khanh                 2025-12-07 18:08:41 -0800 36) 
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 37) def db_commit():
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 38)     g_DB.session.commit();
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 39) 
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 40) '''NOTE:(khanh): MUST CALL THIS INSTEAD OF render_template!!!!!
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 41)     Because I passed in a UserData object into the base html. This enables the dropdown menu to work
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 42)     Pass arguments like how you pass arguments to render_template
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 43) '''
+03e5187b (Khanh                 2025-12-14 23:46:46 -0800 44) def app_render_template(file_name, *args, **kw_args):
+573ac3af (Khanh                 2025-12-15 00:49:29 -0800 45)     userdata = session_get_current_user_dict()
+573ac3af (Khanh                 2025-12-15 00:49:29 -0800 46)     print(userdata)
+573ac3af (Khanh                 2025-12-15 00:49:29 -0800 47)     return render_template(file_name, *args, **kw_args, userdata=userdata)
