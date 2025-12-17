@@ -22,7 +22,7 @@ def init_auth_routes(myapp_obj):
             #ADD LOGIC HERE (like check user from database, etc)
             userdata, user = session_find_user_by_name(form.username.data)
             if not user:
-                flash(f'No user named \'{form.username.data}\', perhaps you wanted to sign in?')
+                flash(f'No user named \'{form.username.data}\', perhaps you wanted to register?')
                 return redirect('/auth/login')
 
             if not check_password_hash(user.password, form.password.data):
