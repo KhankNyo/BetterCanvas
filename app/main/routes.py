@@ -126,7 +126,7 @@ def init_main_routes(myapp_obj):
                 return redirect('/courses')
 
         #first page students will see
-        return app_render_template('/main/courses_join.html', courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student)
+        return app_render_template('/main/courses_join.html', courses=courses, enrollForm = enrollForm, studentEnrollments = studentEnrollments, student=student, isStudent=True)
 
 
     @myapp_obj.route('/announcements_redirect')
